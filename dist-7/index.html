@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>LensFlow — @djib.prod</title>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#c8a96e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="LensFlow"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--card:#12121a;--c2:#1a1a26;--br:rgba(255,255,255,0.08);
+  --ac:#c8a96e;--ac2:#7c6fff;--tx:#f0ede8;--mu:#7a7a8c;
+  --gn:#4ade80;--rd:#f87171;--bl:#38bdf8;--or:#fb923c;--nh:62px}
+html,body{background:var(--bg);color:var(--tx);font-family:'Barlow',sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;padding:18px 14px 100px}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;
+  height:var(--nh);background:var(--card);border-top:1px solid var(--br);
+  display:flex;align-items:center;justify-content:space-around;z-index:100}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 6px;
+  border-radius:10px;border:none;background:transparent;cursor:pointer;flex:1}
+.ni .ic{font-size:1.1rem}
+.ni .lb{font-size:0.52rem;color:var(--mu);font-family:'Barlow',sans-serif;font-weight:600}
+.ni.on .lb{color:var(--ac)}
+.ni.on{background:rgba(200,169,110,0.08)}
+.tab{display:none}
+.ph{margin-bottom:16px;padding-top:4px}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;letter-spacing:.03em}
+.ps{color:var(--mu);font-size:0.75rem;margin-top:3px}
+.card{background:var(--card);border:1px solid var(--br);border-radius:14px;padding:14px;margin-bottom:10px}
+.ct{font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:10px}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.kc{background:var(--card);border:1px solid var(--br);border-radius:12px;padding:12px}
+.kv{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--ac);letter-spacing:.02em}
+.kl{font-size:0.7rem;color:var(--mu);margin-top:2px}
+.kt{font-size:0.65rem;margin-top:3px}
+.up{color:var(--gn)}.warn{color:var(--or)}.bad{color:var(--rd)}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.65rem;background:rgba(200,169,110,0.12);color:var(--ac);margin:2px}
+.tg{background:rgba(74,222,128,0.12);color:var(--gn)}
+.tb{background:rgba(56,189,248,0.12);color:var(--bl)}
+.tp{background:rgba(124,111,255,0.12);color:var(--ac2)}
+.to{background:rgba(251,146,60,0.12);color:var(--or)}
+.btn{padding:12px 16px;border-radius:11px;border:none;cursor:pointer;font-family:'Barlow',sans-serif;
+  font-size:0.9rem;font-weight:700;display:block;width:100%;text-align:center;margin-bottom:7px;
+  text-decoration:none;letter-spacing:.02em}
+.bp{background:var(--ac);color:#0a0a0f}
+.bg2{background:var(--c2);color:var(--tx);border:1px solid var(--br)}
+.bmeta{background:#1877f2;color:#fff}
+.big{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}
+.bgn{background:rgba(74,222,128,0.12);color:var(--gn);border:1px solid rgba(74,222,128,0.25)}
+.btn:disabled{opacity:.4}
+input,textarea,select{background:var(--c2);border:1px solid var(--br);border-radius:9px;color:var(--tx);
+  font-family:'Barlow',sans-serif;font-size:0.88rem;padding:11px 12px;outline:none;
+  width:100%;-webkit-appearance:none;display:block;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{border-color:var(--ac)}
+textarea{resize:vertical;min-height:85px}
+label{font-size:0.73rem;color:var(--mu);display:block;margin-bottom:5px}
+.ins{background:var(--c2);border-left:3px solid var(--ac);border-radius:0 9px 9px 0;padding:11px 12px;margin-bottom:9px}
+.ins.g{border-left-color:var(--gn)}.ins.b{border-left-color:var(--bl)}
+.ins.p{border-left-color:var(--ac2)}.ins.r{border-left-color:var(--rd)}.ins.o{border-left-color:var(--or)}
+.it{font-size:0.78rem;font-weight:700;margin-bottom:2px}
+.ix{font-size:0.72rem;color:var(--mu);line-height:1.5}
+.ntc{background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.2);border-radius:11px;padding:11px 12px;margin-bottom:12px}
+.nt{font-size:0.76rem;font-weight:700;color:var(--bl);margin-bottom:3px}
+.nx{font-size:0.71rem;color:var(--mu);line-height:1.45}
+.nw{background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:11px;padding:11px 12px;margin-bottom:12px}
+.nw .nt{color:var(--or)}
+.stp{display:flex;gap:10px;margin-bottom:12px}
+.sn{width:26px;height:26px;border-radius:50%;background:rgba(200,169,110,0.15);color:var(--ac);
+  font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sc{flex:1}.stit{font-size:0.82rem;font-weight:700;margin-bottom:2px}
+.sdsc{font-size:0.71rem;color:var(--mu);line-height:1.45}
+.ebox{background:var(--c2);border:1px solid rgba(200,169,110,0.25);border-radius:11px;padding:12px;position:relative;margin-bottom:9px}
+.elbl{font-size:0.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ac);margin-bottom:7px}
+.etxt{font-size:0.78rem;line-height:1.6;white-space:pre-wrap;color:var(--tx);padding-right:55px;word-break:break-word}
+.cbtn{position:absolute;top:9px;right:9px;background:rgba(200,169,110,0.15);border:none;
+  border-radius:7px;padding:4px 9px;color:var(--ac);font-size:0.68rem;cursor:pointer;
+  font-family:'Barlow',sans-serif;font-weight:700;white-space:nowrap}
+.sbar{background:var(--c2);border-radius:6px;height:7px;margin-top:7px;overflow:hidden}
+.sfil{height:100%;border-radius:6px;transition:width .5s}
+.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--br)}
+.row:last-child{border-bottom:none}
+.qcard{background:var(--c2);border:1px solid var(--br);border-radius:12px;padding:12px;margin-bottom:9px}
+.qt{font-size:0.68rem;color:var(--ac);font-weight:700}
+.loader{display:flex;gap:4px;align-items:center;padding:16px 0;justify-content:center}
+.loader span{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:boun .8s infinite}
+.loader span:nth-child(2){animation-delay:.15s}.loader span:nth-child(3){animation-delay:.3s}
+.lt{font-size:0.76rem;color:var(--mu);margin-left:7px}
+@keyframes boun{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-8px)}}
+.dvd{height:1px;background:var(--br);margin:12px 0}
+.ratio-bar{display:flex;border-radius:8px;overflow:hidden;height:28px;margin-bottom:10px}
+.ratio-pro{background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#0a0a0f;flex:7}
+.ratio-life{background:var(--ac2);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex:3}
+.ctype{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:0.68rem;font-weight:700;margin:2px}
+.ctype-pro{background:rgba(200,169,110,0.12);color:var(--ac)}
+.ctype-life{background:rgba(124,111,255,0.12);color:var(--ac2)}
+.prog{display:flex;gap:6px;margin-bottom:16px}
+.pbar{flex:1;height:3px;border-radius:3px;background:var(--c2)}
+.pbar.on{background:var(--ac)}
+.xs{font-size:0.7rem}.mu{color:var(--mu)}.ac2{color:var(--ac)}
+.mt1{margin-top:6px}.mt2{margin-top:12px}
+.hidden{display:none}
+.ih{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--ac);margin-bottom:3px}
+.icard{background:var(--c2);border:1px solid var(--br);border-radius:12px;padding:12px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="main">
+
+<!-- ACCUEIL -->
+<div class="tab" id="tab-home">
+  <div class="ph"><div class="pt">Bonjour Djibril 👋</div><div class="ps">@djib.prod · Sartrouville, IDF</div></div>
+  <a href="https://www.instagram.com/djib.prod/" target="_blank" class="btn big">Voir mon profil Instagram →</a>
+  <div class="kg">
+    <div class="kc"><div class="kv">361</div><div class="kl">Abonnés</div><div class="kt warn">Objectif 2-3K</div></div>
+    <div class="kc"><div class="kv">10.8K</div><div class="kl">Vues record</div><div class="kt up">Ton record ✓</div></div>
+    <div class="kc"><div class="kv">450€</div><div class="kl">Tarif mariage</div><div class="kt bad">→ 800-1200€</div></div>
+    <div class="kc"><div class="kv">0€</div><div class="kl">Ce mois</div><div class="kt warn">Objectif 5K€</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Objectif — Fin 2026</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div><div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gn);line-height:1">5 000 – 7 000€</div>
+      <div style="font-size:0.72rem;color:var(--mu)">par mois · auto-entrepreneur exclusif</div></div>
+      <button class="btn bp" style="width:auto;padding:8px 14px;font-size:0.75rem;margin-bottom:0" onclick="goTab('fin')">Simuler →</button>
+    </div>
+    <div class="sbar"><div class="sfil" style="width:8%;background:var(--or)"></div></div>
+    <div style="font-size:0.7rem;color:var(--mu);margin-top:6px">Étape : poser les bases · Juin–Août 2026</div>
+  </div>
+  <div class="card">
+    <div class="ct">Ton écosystème</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--c2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.4rem">📸</div>
+        <div style="flex:1"><div style="font-size:0.82rem;font-weight:700;color:var(--ac)">@djib.prod</div>
+        <div style="font-size:0.7rem;color:var(--mu)">Ta marque perso · Particuliers + directs</div></div>
+        <a href="https://www.instagram.com/djib.prod/" target="_blank" style="font-size:0.68rem;background:rgba(200,169,110,0.15);color:var(--ac);padding:4px 9px;border-radius:7px;text-decoration:none;font-weight:700">Voir</a>
+      </div>
+      <div style="background:var(--c2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.4rem">🎬</div>
+        <div style="flex:1"><div style="font-size:0.82rem;font-weight:700;color:var(--ac2)">@bruitblanc__</div>
+        <div style="font-size:0.7rem;color:var(--mu)">Boîte de prod · Marques + agences B2B</div></div>
+        <a href="https://www.instagram.com/bruitblanc__/" target="_blank" style="font-size:0.68rem;background:rgba(124,111,255,0.15);color:var(--ac2);padding:4px 9px;border-radius:7px;text-decoration:none;font-weight:700">Voir</a>
+      </div>
+      <div style="background:var(--c2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.4rem">🤝</div>
+        <div style="flex:1"><div style="font-size:0.82rem;font-weight:700;color:var(--bl)">@bloodpict</div>
+        <div style="font-size:0.7rem;color:var(--mu)">Associé · Collabs croisées</div></div>
+        <a href="https://www.instagram.com/bloodpict/" target="_blank" style="font-size:0.68rem;background:rgba(56,189,248,0.15);color:var(--bl);padding:4px 9px;border-radius:7px;text-decoration:none;font-weight:700">Voir</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Règle d'or — 70% Pro / 30% Toi</div>
+    <div class="ratio-bar"><div class="ratio-pro">70% TON TRAVAIL</div><div class="ratio-life">30% TOI</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(200,169,110,0.07);border-radius:9px;padding:10px">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--ac);margin-bottom:6px">70% — Ton travail</div>
+        <div style="font-size:0.7rem;color:var(--mu);line-height:1.6">📸 Mariages<br>🚗 Auto<br>🏆 Sport<br>🍽️ Food<br>✏️ Avant/après<br>🎬 BTS</div>
+      </div>
+      <div style="background:rgba(124,111,255,0.07);border-radius:9px;padding:10px">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--ac2);margin-bottom:6px">30% — Toi</div>
+        <div style="font-size:0.7rem;color:var(--mu);line-height:1.6">🚗 Trajet<br>🎒 Setup<br>😂 Coulisses<br>💭 Regard<br>📍 Paris/IDF<br>🎯 Processus</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Ta semaine type</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">📸</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Lundi</div><div style="font-size:0.7rem;color:var(--mu)">Reel — Résultat shooting</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">🎭</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Mardi</div><div style="font-size:0.7rem;color:var(--mu)">Story — Ton quotidien</div></div><span class="ctype ctype-life">30%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">✏️</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Mercredi</div><div style="font-size:0.7rem;color:var(--mu)">Carrousel — Avant/après</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">🎬</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Jeudi</div><div style="font-size:0.7rem;color:var(--mu)">Reel — BTS shooting</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">💬</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Vendredi</div><div style="font-size:0.7rem;color:var(--mu)">Story — Teaser week-end</div></div><span class="ctype ctype-life">30%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">🏆</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Samedi</div><div style="font-size:0.7rem;color:var(--mu)">Post — Portfolio client tagué</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0"><div style="width:24px">💭</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Dimanche</div><div style="font-size:0.7rem;color:var(--mu)">Story — Ton regard sur la semaine</div></div><span class="ctype ctype-life">30%</span></div>
+    <button class="btn bp mt1" onclick="goTab('plan')">Planifier un post →</button>
+  </div>
+  <div class="card">
+    <div class="ct">Ton Reel record</div>
+    <a href="https://www.instagram.com/reel/DQCWes-CBq2/" target="_blank" class="btn big" style="font-size:0.76rem;padding:9px;margin-bottom:10px">Voir le Reel (10 851 vues) →</a>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--ac)">10 851</div><div class="xs mu">Vues</div></div>
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gn)">236</div><div class="xs mu">Likes</div></div>
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--bl)">59</div><div class="xs mu">Reposts</div></div>
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--rd)">8</div><div class="xs mu">Saves</div></div>
+    </div>
+    <div class="ins o"><div class="it">⚡ Accroche 3 premières secondes</div><div class="ix">76% taux ignoré. Commence par ton meilleur plan, texte overlay immédiat.</div></div>
+    <div class="ins p"><div class="it">🔁 Effet loop</div><div class="ix">Vue moyenne 7s/33s. La fin doit rappeler le début.</div></div>
+    <div class="ins b"><div class="it">💾 Pousse les sauvegardes</div><div class="ix">Ajoute : "Sauvegarde si tu cherches un photographe 📌"</div></div>
+    <div class="ins g"><div class="it">💰 CTA clair</div><div class="ix">"DM pour réserver 📸" à chaque post.</div></div>
+  </div>
+</div>
+
+<!-- PUBLIER -->
+<div class="tab" id="tab-plan">
+  <div class="ph"><div class="pt">Publier</div><div class="ps" id="plan-sub">Upload ta photo — l'IA fait le reste</div></div>
+  <div class="prog"><div class="pbar on" id="p1"></div><div class="pbar" id="p2"></div><div class="pbar" id="p3"></div><div class="pbar" id="p4"></div></div>
+  <div id="step1">
+    <div class="card">
+      <label>Type de contenu</label>
+      <select id="post-type">
+        <option value="Reel">Reel 70% — shooting, BTS, résultat</option>
+        <option value="Reel-life">Reel 30% — coulisses, setup, trajet</option>
+        <option value="Post">Post Photo — portfolio, client tagué</option>
+        <option value="Carrousel">Carrousel — avant/après, best of</option>
+        <option value="Story">Story 30% — quotidien, teaser</option>
+      </select>
+      <div id="upload-zone" onclick="document.getElementById('file-inp').click()" style="border:2px dashed var(--br);border-radius:12px;padding:24px 14px;text-align:center;cursor:pointer;margin-bottom:8px;background:var(--c2)">
+        <div id="upload-placeholder"><div style="font-size:2.2rem;margin-bottom:6px">📸</div><div style="font-size:0.85rem;font-weight:700;margin-bottom:3px">Charge tes photos ici</div><div class="xs mu">1 photo (Post/Reel) ou jusqu'à 10 (Carrousel)</div></div>
+        <div id="upload-preview" style="display:none">
+          <div id="preview-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px"></div>
+          <div class="xs ac2">✓ <span id="photo-count">1</span> photo(s) — appuie pour ajouter/changer</div>
+        </div>
+      </div>
+      <button id="clear-photos-btn" onclick="clearPhotos()" style="display:none;width:100%;padding:8px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:var(--rd);border-radius:9px;font-family:Barlow,sans-serif;font-weight:700;font-size:0.75rem;cursor:pointer;margin-bottom:8px">✕ Supprimer toutes les photos</button>
+      <input type="file" id="file-inp" accept="image/*" multiple style="display:none" onchange="handleFile(this)"/>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1"><label>Date</label><input type="date" id="post-date"/></div>
+        <div style="flex:1"><label>Heure</label><input type="time" id="post-time" value="18:00"/></div>
+      </div>
+      <div class="nw"><div class="nt">⚠️ Max 5 hashtags</div><div class="nx">Limite Instagram 2025. L'IA choisit les 5 plus pertinents.</div></div>
+      <button class="btn bp" id="analyze-btn" onclick="analyzeImage()" disabled>✦ Analyser et générer le contenu</button>
+    </div>
+  </div>
+  <div id="step2" style="display:none">
+    <div class="card" style="text-align:center;padding:36px 16px">
+      <img id="loading-img" style="width:100%;max-height:170px;object-fit:cover;border-radius:9px;margin-bottom:18px;opacity:.7" src="" alt=""/>
+      <div class="loader"><span></span><span></span><span></span><span class="lt">L'IA analyse ton image…</span></div>
+      <div class="xs mu" style="margin-top:10px">Détection niche · Légende · Hashtags · Timing</div>
+    </div>
+  </div>
+  <div id="step3" style="display:none">
+    <div class="card"><div style="display:flex;align-items:center;gap:8px"><img id="result-thumb" style="width:52px;height:52px;object-fit:cover;border-radius:7px;flex-shrink:0" src="" alt=""/><div><div id="result-desc" style="font-size:0.78rem;font-weight:600"></div><div id="result-tags" style="margin-top:4px"></div></div></div><div id="result-ratio-hint" style="font-size:0.72rem;padding:7px 10px;border-radius:8px;margin-top:8px"></div></div>
+    <div class="card mt2"><div class="ct">Légende générée</div><div class="ebox"><div class="etxt" id="result-caption"></div><button class="cbtn" onclick="copyEl('result-caption',this)">Copier</button></div><label>Modifier si besoin</label><textarea id="edit-caption" style="min-height:80px;font-size:0.78rem" oninput="updateLaterText()"></textarea></div>
+    <div class="card mt2"><div class="ct">Hashtags (5 max)</div><div class="ebox"><div class="etxt" id="result-hashtags" style="color:var(--ac2);font-size:0.76rem"></div><button class="cbtn" onclick="copyEl('result-hashtags',this)">Copier</button></div></div>
+    <div class="ntc mt2"><div class="nt" id="result-time">⏰ Meilleur créneau</div><div class="nx">Basé sur ton audience : 70% hommes, actifs en soirée.</div></div>
+    <div class="ins b mt1" id="result-conseil" style="display:none"></div>
+    <button class="btn bp mt2" onclick="goStep(4)">Continuer → Meta Business Suite</button>
+    <button class="btn bg2" onclick="resetPlan()">← Changer l'image</button>
+  </div>
+  <div id="step3-err" style="display:none"><div class="card"><div class="ins r"><div class="it">Erreur</div><div class="ix">Réessaie avec une photo JPG/PNG.</div></div><button class="btn bg2 mt1" onclick="resetPlan()">← Réessayer</button></div></div>
+  <div id="step4" style="display:none">
+    <div class="ntc"><div class="nt">🟢 Meta Business Suite connecté ✓</div><div class="nx">Facebook + Instagram liés. Copie → colle dans Meta → programme → publication automatique gratuite.<br><span id="photos-info" style="color:var(--ac);font-weight:700"></span></div></div>
+    <div class="card"><div class="ct">Texte à coller dans Meta</div><div class="ebox"><div class="elbl">Légende + hashtags</div><div class="etxt" id="later-text" style="max-height:150px;overflow:auto"></div><button class="cbtn" onclick="copyEl('later-text',this)">Tout copier</button></div></div>
+    <div class="card mt2">
+      <div class="ct">3 étapes dans Meta Business Suite</div>
+      <div class="stp"><div class="sn">1</div><div class="sc"><div class="stit">Ouvre Meta Business Suite</div><div class="sdsc">business.facebook.com ou l'app Meta sur iPhone</div></div></div>
+      <div class="stp"><div class="sn">2</div><div class="sc"><div class="stit">Crée un Reel ou post</div><div class="sdsc">Uploade ta photo/vidéo → colle le texte → sélectionne @djib.prod</div></div></div>
+      <div class="stp"><div class="sn">3</div><div class="sc"><div class="stit">Programme</div><div class="sdsc" id="meta-slot">Clique Planifier → Meta publie automatiquement</div></div></div>
+      <a href="https://business.facebook.com" target="_blank" class="btn bmeta">Ouvrir Meta Business Suite →</a>
+    </div>
+    <button class="btn bgn" onclick="addToQueue()">✓ Ajouté à ma file d'attente</button>
+    <button class="btn bg2" onclick="goStep(3)">← Modifier</button>
+  </div>
+</div>
+
+<!-- PLANNING -->
+<div class="tab" id="tab-cal">
+  <div class="ph"><div class="pt">Planning</div><div class="ps">Calé sur tes prestations + 70/30</div></div>
+  <div class="card">
+    <div class="ct">Prestations Juin 2026</div>
+    <div class="row"><div><div style="font-size:0.85rem;font-weight:700">Sam 6 juin</div><div class="xs mu">💍 Mariage</div></div><span class="tag tp">Prestation</span></div>
+    <div class="row"><div><div style="font-size:0.85rem;font-weight:700">Sam 13 juin</div><div class="xs mu">💍 Mariage</div></div><span class="tag tp">Prestation</span></div>
+    <div class="row"><div><div style="font-size:0.85rem;font-weight:700">Sam 20 juin</div><div class="xs mu">💍 Mariage</div></div><span class="tag tp">Prestation</span></div>
+  </div>
+  <div class="card mt2"><div class="ct">Posts recommandés</div><div class="ntc"><div class="nt">💡 Logique 70/30</div><div class="nx">Veille = Story toi (30%) · Lendemain = Reel résultat (70%) · J+3 = Carrousel best of (70%)</div></div><div id="smart-plan"></div></div>
+  <div class="card mt2"><div class="ct">Ma file d'attente (<span id="queue-count">0</span>)</div><div id="queue-list"><div style="text-align:center;padding:20px;color:var(--mu);font-size:0.78rem">Aucun post — utilise l'onglet Publier</div></div><button class="btn bp mt1" onclick="goTab('plan')">+ Planifier un post</button></div>
+</div>
+
+<!-- REVENUS -->
+<div class="tab" id="tab-fin">
+  <div class="ph"><div class="pt">Revenus</div><div class="ps">Objectif : 5 000 – 7 000€/mois</div></div>
+  <div class="card">
+    <div class="ct">Simulateur mensuel</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div><label>Mariages</label><input type="number" id="nb-mariages" value="3" min="0" oninput="calcRevenu()"/></div>
+      <div><label>Tarif mariage (€)</label><input type="number" id="tarif-mariage" value="450" oninput="calcRevenu()"/></div>
+      <div><label>Shootings</label><input type="number" id="nb-autres" value="0" min="0" oninput="calcRevenu()"/></div>
+      <div><label>Tarif shooting (€)</label><input type="number" id="tarif-autres" value="500" oninput="calcRevenu()"/></div>
+      <div><label>Contrats récurrents</label><input type="number" id="nb-recurrents" value="0" min="0" oninput="calcRevenu()"/></div>
+      <div><label>Tarif contrat (€)</label><input type="number" id="tarif-recurrents" value="500" oninput="calcRevenu()"/></div>
+    </div>
+    <div style="background:var(--c2);border-radius:12px;padding:14px;text-align:center;margin-bottom:10px">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:4px">Revenu estimé</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem" id="total-revenu">2 700€</div>
+      <div id="objectif-status" style="font-size:0.78rem;margin-top:4px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--mu);margin-bottom:4px"><span>0€</span><span>5 000€</span><span>7 000€</span></div>
+    <div class="sbar" style="height:10px;margin-bottom:6px"><div id="revenu-bar" style="height:100%;border-radius:6px;background:var(--ac);width:0%;transition:width .5s"></div></div>
+    <div id="revenu-manque" style="font-size:0.75rem;color:var(--mu);text-align:center"></div>
+  </div>
+  <div class="card"><div class="ct">Scénarios pour 5 000€/mois</div><div id="scenarios-list"></div></div>
+  <div class="card">
+    <div class="ct">Dépendance Reebsa — Ton risque</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="text-align:center;background:var(--c2);border-radius:8px;padding:10px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--or)">90%</div><div style="font-size:0.68rem;color:var(--mu)">Reebsa</div></div>
+      <div style="text-align:center;background:var(--c2);border-radius:8px;padding:10px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gn)">10%</div><div style="font-size:0.68rem;color:var(--mu)">Direct</div></div>
+    </div>
+    <div style="display:flex;border-radius:8px;overflow:hidden;height:24px;margin-bottom:8px">
+      <div style="background:var(--or);flex:5;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#fff">50% Reebsa</div>
+      <div style="background:var(--gn);flex:5;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#0a0a0f">50% Direct</div>
+    </div>
+    <div style="font-size:0.7rem;color:var(--mu)">Objectif fin 2026 — Instagram = ta clientèle propre</div>
+  </div>
+  <div class="card">
+    <div class="ct">Roadmap — Indépendance totale</div>
+    <div class="stp"><div class="sn" style="background:rgba(200,169,110,0.15);color:var(--ac)">1</div><div class="sc"><div class="stit">Juin–Août — Poser les bases</div><div class="sdsc">4 posts/sem · Tarif → 800€ · Contacter 2 restaurants</div></div></div>
+    <div class="stp"><div class="sn" style="background:rgba(56,189,248,0.15);color:var(--bl)">2</div><div class="sc"><div class="stit">Septembre — Premier palier</div><div class="sdsc">3 000€/mois · 1er client direct Instagram · 500-800 abonnés</div></div></div>
+    <div class="stp"><div class="sn" style="background:rgba(124,111,255,0.15);color:var(--ac2)">3</div><div class="sc"><div class="stit">Oct–Nov — Accélération</div><div class="sdsc">DMs entrants · Marques auto + sportifs · Tarif → 1 000€</div></div></div>
+    <div class="stp"><div class="sn" style="background:rgba(74,222,128,0.15);color:var(--gn)">4</div><div class="sc"><div class="stit">Décembre — Objectif ✓</div><div class="sdsc">5 000-7 000€/mois · Intérim arrêté · 50% clients directs</div></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">⚡ Actions cette semaine</div>
+    <div class="stp"><div class="sn">1</div><div class="sc"><div class="stit">Tarif mariage → 800€</div><div class="sdsc">Mets à jour ton portfolio et ta bio Instagram.</div></div></div>
+    <div class="stp"><div class="sn">2</div><div class="sc"><div class="stit">Contacte 2 restaurants</div><div class="sdsc">Majestea, Mistral ou Mood Thai — contrat 400-500€/mois.</div></div></div>
+    <div class="stp"><div class="sn">3</div><div class="sc"><div class="stit">Poste 3 fois cette semaine</div><div class="sdsc">Stock disponible — pas besoin d'un nouveau shooting.</div></div></div>
+  </div>
+</div>
+
+<!-- ANALYSE -->
+<div class="tab" id="tab-stats">
+  <div class="ph"><div class="pt">Analyser</div><div class="ps">Comparé à ton record : 10 851 vues</div></div>
+  <div class="ntc"><div class="nt">📊 Où trouver tes stats ?</div><div class="nx">Instagram → ton post → "Voir les statistiques". Ou Meta Business Suite Analytics.</div></div>
+  <div class="card">
+    <div class="ct">Métriques du post</div>
+    <label>Type</label><select id="met-type"><option>Reel</option><option>Post</option><option>Carrousel</option><option>Story</option></select>
+    <label>Comptes touchés</label><input type="number" id="met-reach" placeholder="0"/>
+    <label>Likes</label><input type="number" id="met-likes" placeholder="0"/>
+    <label>Sauvegardes ★</label><input type="number" id="met-saves" placeholder="0"/>
+    <label>Commentaires</label><input type="number" id="met-comments" placeholder="0"/>
+    <label>Republications</label><input type="number" id="met-reposts" placeholder="0"/>
+    <button class="btn bp" onclick="analyzeStats()">∿ Analyser vs mon record</button>
+  </div>
+  <div id="stats-loading" style="display:none" class="loader"><span></span><span></span><span></span><span class="lt">Diagnostic…</span></div>
+  <div id="stats-result"></div>
+  <div class="card mt2">
+    <div class="ct">🚀 Quand sponsoriser ?</div>
+    <div class="ins g"><div class="it">Les 4 signaux verts</div><div class="ix">✓ Un post dépasse 15 000 vues en organique<br>✓ Tu reçois des DMs de prospects<br>✓ Engagement dépasse 5% sur 3 posts<br>✓ Un format revient systématiquement dans tes tops</div></div>
+    <div class="ins b"><div class="it">Budget minimal</div><div class="ix">5-10€/jour pendant 7 jours sur ton meilleur post.</div></div>
+  </div>
+  <div class="card mt2">
+    <div class="ct">Mon record à battre</div>
+    <div class="row"><span class="xs mu">Vues</span><div style="text-align:right"><div class="xs mu">Record : 10 851</div><div class="xs ac2">Objectif : 15 000+</div></div></div>
+    <div class="row"><span class="xs mu">Republications</span><div style="text-align:right"><div class="xs mu">59</div><div class="xs ac2">Objectif : 80+</div></div></div>
+    <div class="row"><span class="xs mu">Sauvegardes</span><div style="text-align:right"><div class="xs mu">8</div><div class="xs ac2" style="color:var(--rd)">Objectif : 50+</div></div></div>
+    <div class="row"><span class="xs mu">Taux ignoré</span><div style="text-align:right"><div class="xs mu">76,3%</div><div class="xs ac2">Objectif : &lt;50%</div></div></div>
+    <div class="row"><span class="xs mu">Vue moyenne</span><div style="text-align:right"><div class="xs mu">7s/33s</div><div class="xs ac2">Objectif : 15s+</div></div></div>
+  </div>
+  <div class="card mt2">
+    <div class="ct">Comptes à étudier</div>
+    <div class="icard"><span class="tag">🚗 Auto</span><div class="ih">@e_lphotography</div><div style="font-size:0.73rem;margin-bottom:7px">93K 🇫🇷 — Mix 70/30 parfait. Montre ses mains, ses réactions. Les gens s'abonnent à LUI.</div><a href="https://www.instagram.com/e_lphotography/" target="_blank" class="btn big" style="font-size:0.73rem;padding:9px">Ouvrir →</a></div>
+    <div class="icard"><span class="tag">💍 Mariage</span><div class="ih">@99mariages</div><div style="font-size:0.73rem;margin-bottom:7px">9 500 abonnés avec 15 posts 🇫🇷 — Qualité > quantité. Même zone géo.</div><a href="https://www.instagram.com/99mariages/" target="_blank" class="btn big" style="font-size:0.73rem;padding:9px">Ouvrir →</a></div>
+    <div class="icard"><span class="tag">🏆 Sport</span><div class="ih">@louisgarnierphotos</div><div style="font-size:0.73rem;margin-bottom:7px">Référence sport France 🇫🇷 — Histoires visuelles, freeze action.</div><a href="https://www.instagram.com/louisgarnierphotos/" target="_blank" class="btn big" style="font-size:0.73rem;padding:9px">Ouvrir →</a></div>
+  </div>
+</div>
+
+</div>
+
+<nav class="bnav">
+  <button class="ni" id="nav-home" onclick="goTab('home')"><span class="ic">◈</span><span class="lb">Accueil</span></button>
+  <button class="ni" id="nav-plan" onclick="goTab('plan')"><span class="ic">📤</span><span class="lb">Publier</span></button>
+  <button class="ni" id="nav-cal" onclick="goTab('cal')"><span class="ic">📅</span><span class="lb">Planning</span></button>
+  <button class="ni" id="nav-fin" onclick="goTab('fin')"><span class="ic">💰</span><span class="lb">Revenus</span></button>
+  <button class="ni" id="nav-stats" onclick="goTab('stats')"><span class="ic">∿</span><span class="lb">Analyse</span></button>
+</nav>
+</div>
+
+<script>
+var currentTab = 'home';
+var currentStep = 1;
+var imgBase64 = null;
+var imgMime = null;
+var imgPreview = null;
+var generatedData = null;
+var queue = [];
+var TABS = ['home','plan','cal','fin','stats'];
+
+var SMART_PLAN = [
+  {jour:"Depuis LA", time:"19:00", type:"Story", cat:"life", label:"Un photographe à Los Angeles 🌴", reason:"30% Toi — lifestyle depuis LA"},
+  {jour:"Jeu 29 mai", time:"19:00", type:"Story", cat:"life", label:"Back in Paris 📸", reason:"30% Toi — annonce ton retour"},
+  {jour:"Ven 30 mai", time:"18:00", type:"Reel", cat:"pro", label:"Meilleure photo de ton stock", reason:"70% Pro — relance l'algo"},
+  {jour:"Sam 31 mai", time:"12:30", type:"Carrousel", cat:"pro", label:"Avant/après retouche mariage", reason:"70% Pro — sauvegardes élevées"},
+  {jour:"Lun 2 juin", time:"18:00", type:"Reel", cat:"pro", label:"Teaser mariage du 6 juin", reason:"70% Pro — 4 jours avant"},
+  {jour:"Mar 3 juin", time:"19:00", type:"Story", cat:"life", label:"Ton setup", reason:"30% Toi — coulisses"},
+  {jour:"Mer 4 juin", time:"18:00", type:"Post", cat:"pro", label:"Portfolio auto", reason:"70% Pro — tag garage"},
+  {jour:"Ven 5 juin", time:"19:00", type:"Story", cat:"life", label:"Shooting demain 🤫", reason:"30% Toi — veille mariage"},
+  {jour:"Lun 8 juin", time:"18:00", type:"Reel", cat:"pro", label:"Premières images mariage 6 juin", reason:"70% Pro — émotion maximale"},
+  {jour:"Mer 10 juin", time:"12:30", type:"Carrousel", cat:"pro", label:"Best of mariage 6 juin", reason:"70% Pro — sauvegardes"},
+  {jour:"Ven 12 juin", time:"19:00", type:"Story", cat:"life", label:"Shooting demain 🤫", reason:"30% Toi — veille mariage 13"},
+  {jour:"Lun 15 juin", time:"18:00", type:"Reel", cat:"pro", label:"Premières images mariage 13 juin", reason:"70% Pro"},
+  {jour:"Mer 17 juin", time:"12:30", type:"Carrousel", cat:"pro", label:"Best of mariage 13 juin", reason:"70% Pro"},
+  {jour:"Ven 19 juin", time:"19:00", type:"Story", cat:"life", label:"Shooting demain 🤫", reason:"30% Toi — veille mariage 20"},
+  {jour:"Lun 22 juin", time:"18:00", type:"Reel", cat:"pro", label:"Premières images mariage 20 juin", reason:"70% Pro"}
+];
+
+var SCENARIOS = [
+  {label:"Actuel", mariages:6, tarif:450, autres:0, ta:0, rec:0, tr:0},
+  {label:"Tarif 800€", mariages:6, tarif:800, autres:1, ta:500, rec:0, tr:0},
+  {label:"Objectif min", mariages:6, tarif:1000, autres:2, ta:500, rec:1, tr:500},
+  {label:"Objectif 7K€", mariages:7, tarif:1000, autres:2, ta:600, rec:2, tr:500}
+];
+
+function goTab(id) {
+  var i, el;
+  for (i = 0; i < TABS.length; i++) {
+    el = document.getElementById('tab-' + TABS[i]);
+    if (el) el.style.display = 'none';
+  }
+  el = document.getElementById('tab-' + id);
+  if (el) el.style.display = 'block';
+  var btns = document.querySelectorAll('.ni');
+  for (i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('on');
+  }
+  el = document.getElementById('nav-' + id);
+  if (el) el.classList.add('on');
+  currentTab = id;
+  if (id === 'cal') { renderSmartPlan(); renderQueue(); }
+  window.scrollTo(0, 0);
+}
+
+function goStep(n) {
+  var steps = ['step1','step2','step3','step3-err','step4'];
+  var i, el;
+  for (i = 0; i < steps.length; i++) {
+    el = document.getElementById(steps[i]);
+    if (el) el.style.display = 'none';
+  }
+  var subs = {1:"Upload ta photo — l'IA fait le reste", 2:"Analyse en cours…", 3:"Vérifie le contenu", 4:"Prêt pour Meta Business Suite"};
+  document.getElementById('plan-sub').textContent = subs[n] || '';
+  var pbars = ['p1','p2','p3','p4'];
+  for (i = 0; i < pbars.length; i++) {
+    el = document.getElementById(pbars[i]);
+    if (el) el.className = 'pbar' + (i < n ? ' on' : '');
+  }
+  var showId;
+  if (n === 3 && generatedData) showId = 'step3';
+  else if (n === 3 && !generatedData) showId = 'step3-err';
+  else showId = 'step' + n;
+  el = document.getElementById(showId);
+  if (el) el.style.display = 'block';
+  if (n === 4) {
+    var info = document.getElementById('photos-info');
+    if (info) {
+      if (allPhotos.length > 1) {
+        info.textContent = allPhotos.length + ' photos sélectionnées — uploade-les toutes dans Meta pour le carrousel.';
+      } else {
+        info.textContent = '';
+      }
+    }
+  }
+}
+
+var allPhotos = []; // stores {base64, mime, preview} for each photo
+
+function handleFile(input) {
+  var files = input.files;
+  if (!files || files.length === 0) return;
+  var max = 10;
+  var toLoad = Math.min(files.length, max - allPhotos.length);
+  if (toLoad <= 0) { alert('Maximum 10 photos pour un carrousel.'); return; }
+  var loaded = 0;
+  for (var i = 0; i < toLoad; i++) {
+    (function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        allPhotos.push({base64: e.target.result.split(',')[1], mime: file.type, preview: e.target.result});
+        loaded++;
+        if (loaded === toLoad) renderPreviews();
+      };
+      reader.readAsDataURL(file);
+    })(files[i]);
+  }
+}
+
+function renderPreviews() {
+  if (allPhotos.length === 0) return;
+  imgPreview = allPhotos[0].preview;
+  imgBase64 = allPhotos[0].base64;
+  imgMime = allPhotos[0].mime;
+  document.getElementById('upload-placeholder').style.display = 'none';
+  document.getElementById('upload-preview').style.display = 'block';
+  document.getElementById('upload-zone').style.borderColor = 'var(--ac)';
+  document.getElementById('analyze-btn').disabled = false;
+  document.getElementById('clear-photos-btn').style.display = 'block';
+  document.getElementById('photo-count').textContent = allPhotos.length;
+  var grid = document.getElementById('preview-grid');
+  var html = '';
+  for (var i = 0; i < allPhotos.length; i++) {
+    html += '<div style="position:relative">';
+    html += '<img src="' + allPhotos[i].preview + '" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px"/>';
+    if (i === 0) html += '<div style="position:absolute;top:4px;left:4px;background:var(--ac);color:#0a0a0f;font-size:0.55rem;font-weight:700;padding:2px 5px;border-radius:4px">1ère</div>';
+    html += '<button onclick="removePhoto(' + i + ')" style="position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;width:18px;height:18px;color:#fff;font-size:0.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1">✕</button>';
+    html += '</div>';
+  }
+  if (allPhotos.length < 10) {
+    html += '<div onclick="document.getElementById(\'file-inp\').click()" style="aspect-ratio:1;border:2px dashed var(--br);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:var(--c2);font-size:1.2rem">+</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function removePhoto(idx) {
+  allPhotos.splice(idx, 1);
+  if (allPhotos.length === 0) { clearPhotos(); return; }
+  imgPreview = allPhotos[0].preview;
+  imgBase64 = allPhotos[0].base64;
+  imgMime = allPhotos[0].mime;
+  renderPreviews();
+}
+
+function clearPhotos() {
+  allPhotos = [];
+  imgBase64 = null; imgMime = null; imgPreview = null;
+  document.getElementById('upload-placeholder').style.display = 'block';
+  document.getElementById('upload-preview').style.display = 'none';
+  document.getElementById('upload-zone').style.borderColor = '';
+  document.getElementById('analyze-btn').disabled = true;
+  document.getElementById('clear-photos-btn').style.display = 'none';
+  document.getElementById('file-inp').value = '';
+  document.getElementById('preview-grid').innerHTML = '';
+}
+
+function resetPlan() {
+  clearPhotos();
+  generatedData = null;
+  goStep(1);
+}
+
+function updateLaterText() {
+  var cap = document.getElementById('edit-caption').value;
+  var hash = document.getElementById('result-hashtags').textContent;
+  document.getElementById('later-text').textContent = cap + '\n\n' + hash;
+}
+
+function analyzeImage() {
+  if (!imgBase64) return;
+  var type = document.getElementById('post-type').value;
+  document.getElementById('loading-img').src = imgPreview;
+  goStep(2);
+  var prompt = "Tu es l'assistant Instagram de Djibril Kouadio (@djib.prod), photographe evenementiel, automobile et sportifs a Sartrouville IDF. Audience : 70% hommes. Record : 10 851 vues. Type de post : " + type + ". Clients auto: ECAB,Wrapzone,TunInox. Mariage: Reebsa Production. Food: Majestea,Mistral,Mood Thai. Regle 70/30 : 70% travail, 30% lui. Analyse cette image. Reponds UNIQUEMENT en JSON sans backticks : {\"niche\":\"auto|mariage|food|sport|evenement|lifestyle\",\"description\":\"1 phrase\",\"categorie\":\"pro|lifestyle\",\"legende\":\"max 90 mots, humain et pro, CTA DM pour reserver\",\"hashtags\":\"5 hashtags separes par espaces\",\"bestTime\":\"ex: Jeudi 18h00\",\"clientTag\":\"client a taguer ou vide\",\"conseil\":\"1 conseil visuel court\",\"ratioHint\":\"explication 70% ou 30%\"}";
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 900,
+      messages: [{role: 'user', content: [
+        {type: 'image', source: {type: 'base64', media_type: imgMime, data: imgBase64}},
+        {type: 'text', text: prompt}
+      ]}]
+    })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    var txt = '';
+    if (d.content) { for (var i = 0; i < d.content.length; i++) { if (d.content[i].text) txt += d.content[i].text; } }
+    txt = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+    try {
+      generatedData = JSON.parse(txt);
+      document.getElementById('result-desc').textContent = generatedData.description || '';
+      var tagsHtml = '<span class="ctype ' + (generatedData.categorie === 'pro' ? 'ctype-pro' : 'ctype-life') + '">' + (generatedData.categorie === 'pro' ? '70% Ton travail' : '30% Toi') + '</span>';
+      tagsHtml += ' <span class="tag">' + (generatedData.niche || '') + '</span>';
+      if (generatedData.clientTag) tagsHtml += ' <span class="tag tb">@' + generatedData.clientTag + '</span>';
+      document.getElementById('result-tags').innerHTML = tagsHtml;
+      var hint = document.getElementById('result-ratio-hint');
+      hint.textContent = generatedData.ratioHint || '';
+      hint.style.background = generatedData.categorie === 'pro' ? 'rgba(200,169,110,0.08)' : 'rgba(124,111,255,0.08)';
+      hint.style.color = generatedData.categorie === 'pro' ? 'var(--ac)' : 'var(--ac2)';
+      document.getElementById('result-thumb').src = imgPreview;
+      document.getElementById('result-caption').textContent = generatedData.legende || '';
+      document.getElementById('edit-caption').value = generatedData.legende || '';
+      document.getElementById('result-hashtags').textContent = generatedData.hashtags || '';
+      document.getElementById('result-time').textContent = '⏰ Meilleur créneau — ' + (generatedData.bestTime || 'Jeudi 18h00');
+      document.getElementById('meta-slot').textContent = (generatedData.bestTime || 'Jeudi 18h00') + ' → Meta publie automatiquement';
+      var cons = document.getElementById('result-conseil');
+      if (generatedData.conseil) {
+        cons.innerHTML = '<div class="it">💡 Conseil</div><div class="ix">' + generatedData.conseil + '</div>';
+        cons.style.display = 'block';
+      }
+      document.getElementById('later-text').textContent = (generatedData.legende || '') + '\n\n' + (generatedData.hashtags || '');
+      goStep(3);
+    } catch(e) { generatedData = null; goStep(3); }
+  }).catch(function() { generatedData = null; goStep(3); });
+}
+
+function addToQueue() {
+  var caption = document.getElementById('edit-caption').value || (generatedData ? generatedData.legende : '');
+  var hashtags = generatedData ? generatedData.hashtags : '';
+  var date = document.getElementById('post-date').value || (generatedData ? generatedData.bestTime : 'À planifier');
+  var time = document.getElementById('post-time').value || '18:00';
+  var type = document.getElementById('post-type').value;
+  var cat = generatedData ? generatedData.categorie : 'pro';
+  var photoCount = allPhotos.length;
+  queue.unshift({id: Date.now(), type: type, cat: cat, caption: caption, hashtags: hashtags, date: date, time: time, status: 'planifié', preview: imgPreview, photoCount: photoCount});
+  clearPhotos();
+  generatedData = null;
+  goStep(1);
+  goTab('cal');
+}
+
+function renderQueue() {
+  var c = document.getElementById('queue-list');
+  var count = document.getElementById('queue-count');
+  if (count) count.textContent = queue.length;
+  if (queue.length === 0) {
+    c.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mu);font-size:0.78rem">Aucun post planifié</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < queue.length; i++) {
+    var p = queue[i];
+    var catBadge = '<span class="ctype ' + (p.cat === 'pro' ? 'ctype-pro' : 'ctype-life') + '">' + (p.cat === 'pro' ? '70%' : '30%') + '</span>';
+    var statusBadge = '<span class="tag ' + (p.status === 'publié' ? 'tg' : 'tb') + '">' + (p.status === 'publié' ? '✓ Publié' : '⏳ Meta') + '</span>';
+    var actionBtn = '';
+    if (p.status !== 'publié') {
+      actionBtn = '<button style="font-size:0.68rem;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:var(--gn);border-radius:7px;padding:3px 9px;cursor:pointer;font-family:Barlow,sans-serif;font-weight:700" onclick="markDone(' + p.id + ')">Marquer publié</button>';
+    }
+    var imgHtml = p.preview ? '<img src="' + p.preview + '" style="width:42px;height:42px;object-fit:cover;border-radius:7px;flex-shrink:0"/>' : '';
+    html += '<div class="qcard"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' + imgHtml + '<div style="flex:1"><div style="display:flex;align-items:center;justify-content:space-between"><div><span class="tag">' + p.type + '</span>' + catBadge + '</div><span class="qt">' + p.date + ' · ' + p.time + '</span></div></div></div>';
+    html += '<div style="font-size:0.78rem;line-height:1.5;margin-bottom:4px">' + (p.caption || '') + '</div>';
+    if (p.hashtags) html += '<div style="font-size:0.67rem;color:var(--ac2);margin-bottom:6px">' + p.hashtags + '</div>';
+    html += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + statusBadge + actionBtn + '</div></div>';
+  }
+  c.innerHTML = html;
+}
+
+function markDone(id) {
+  for (var i = 0; i < queue.length; i++) {
+    if (queue[i].id === id) { queue[i].status = 'publié'; break; }
+  }
+  renderQueue();
+}
+
+function renderSmartPlan() {
+  var c = document.getElementById('smart-plan');
+  if (!c) return;
+  var html = '';
+  for (var i = 0; i < SMART_PLAN.length; i++) {
+    var p = SMART_PLAN[i];
+    var border = i < SMART_PLAN.length - 1 ? '1px solid var(--br)' : 'none';
+    var catCls = p.cat === 'pro' ? 'ctype ctype-pro' : 'ctype ctype-life';
+    var catLbl = p.cat === 'pro' ? '70% Pro' : '30% Toi';
+    html += '<div style="padding:10px 0;border-bottom:' + border + '">';
+    html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">';
+    html += '<span class="tag">' + p.type + '</span>';
+    html += '<span class="' + catCls + '">' + catLbl + '</span>';
+    html += '<span style="font-size:0.78rem;font-weight:700">' + p.jour + '</span>';
+    html += '<span class="xs mu">· ' + p.time + '</span></div>';
+    html += '<div style="font-size:0.8rem;margin-bottom:2px">' + p.label + '</div>';
+    html += '<div style="font-size:0.68rem;color:var(--mu);font-style:italic;margin-bottom:6px">' + p.reason + '</div>';
+    html += '<button style="background:rgba(200,169,110,0.1);border:1px solid rgba(200,169,110,0.2);color:var(--ac);border-radius:7px;padding:4px 10px;cursor:pointer;font-family:Barlow,sans-serif;font-weight:700;font-size:0.68rem" onclick="prepFromPlan(\'' + p.type + '\',\'' + p.time + '\')">Préparer →</button>';
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function prepFromPlan(type, time) {
+  document.getElementById('post-type').value = type;
+  document.getElementById('post-time').value = time;
+  goTab('plan');
+}
+
+function calcRevenu() {
+  var m = parseInt(document.getElementById('nb-mariages').value) || 0;
+  var tm = parseInt(document.getElementById('tarif-mariage').value) || 0;
+  var a = parseInt(document.getElementById('nb-autres').value) || 0;
+  var ta = parseInt(document.getElementById('tarif-autres').value) || 0;
+  var r = parseInt(document.getElementById('nb-recurrents').value) || 0;
+  var tr = parseInt(document.getElementById('tarif-recurrents').value) || 0;
+  var total = (m * tm) + (a * ta) + (r * tr);
+  document.getElementById('total-revenu').textContent = total.toLocaleString('fr-FR') + '€';
+  var pct = Math.min((total / 7000) * 100, 100);
+  var bar = document.getElementById('revenu-bar');
+  bar.style.width = pct + '%';
+  bar.style.background = total >= 5000 ? 'var(--gn)' : total >= 3000 ? 'var(--or)' : 'var(--ac)';
+  var status = document.getElementById('objectif-status');
+  var manque = document.getElementById('revenu-manque');
+  if (total >= 7000) {
+    status.textContent = '🎉 Objectif maximum atteint !'; status.style.color = 'var(--gn)';
+    manque.textContent = 'Tu es dans la zone cible. Pense à sponsoriser.';
+  } else if (total >= 5000) {
+    status.textContent = '✓ Objectif minimum atteint'; status.style.color = 'var(--gn)';
+    manque.textContent = 'Il manque ' + (7000 - total).toLocaleString('fr-FR') + '€ pour 7 000€/mois';
+  } else {
+    status.textContent = 'En dessous de l\'objectif'; status.style.color = 'var(--or)';
+    manque.textContent = 'Il manque ' + (5000 - total).toLocaleString('fr-FR') + '€ pour 5 000€/mois';
+  }
+}
+
+function renderScenarios() {
+  var c = document.getElementById('scenarios-list');
+  if (!c) return;
+  var html = '';
+  for (var i = 0; i < SCENARIOS.length; i++) {
+    var s = SCENARIOS[i];
+    var total = (s.mariages * s.tarif) + (s.autres * s.ta) + (s.rec * s.tr);
+    var ok = total >= 5000;
+    var color = ok ? 'var(--gn)' : 'var(--or)';
+    var details = s.mariages + ' mariages × ' + s.tarif + '€';
+    if (s.autres > 0) details += ' · ' + s.autres + ' shootings × ' + s.ta + '€';
+    if (s.rec > 0) details += ' · ' + s.rec + ' contrat(s) × ' + s.tr + '€/mois';
+    html += '<div style="padding:10px;background:var(--c2);border-radius:10px;margin-bottom:8px;cursor:pointer" onclick="applyScenario(' + s.mariages + ',' + s.tarif + ',' + s.autres + ',' + s.ta + ',' + s.rec + ',' + s.tr + ')">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">';
+    html += '<div style="font-size:0.8rem;font-weight:700">' + s.label + '</div>';
+    html += '<div style="font-family:Bebas Neue,sans-serif;font-size:1.2rem;color:' + color + '">' + total.toLocaleString('fr-FR') + '€</div></div>';
+    html += '<div style="font-size:0.7rem;color:var(--mu)">' + details + '</div>';
+    html += '<div style="font-size:0.68rem;margin-top:4px;color:' + color + '">' + (ok ? '✓ Objectif atteint' : '↑ Utiliser ce scénario') + '</div>';
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function applyScenario(m, tm, a, ta, r, tr) {
+  document.getElementById('nb-mariages').value = m;
+  document.getElementById('tarif-mariage').value = tm;
+  document.getElementById('nb-autres').value = a;
+  document.getElementById('tarif-autres').value = ta;
+  document.getElementById('nb-recurrents').value = r;
+  document.getElementById('tarif-recurrents').value = tr;
+  calcRevenu();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function copyEl(srcId, btn) {
+  var txt = document.getElementById(srcId).textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(function() {
+      var orig = btn.textContent; btn.textContent = '✓ Copié !'; btn.style.color = 'var(--gn)';
+      setTimeout(function() { btn.textContent = orig; btn.style.color = ''; }, 2000);
+    });
+  }
+}
+
+function analyzeStats() {
+  var reach = document.getElementById('met-reach').value;
+  var likes = document.getElementById('met-likes').value;
+  var saves = document.getElementById('met-saves').value;
+  var comments = document.getElementById('met-comments').value;
+  var reposts = document.getElementById('met-reposts').value;
+  var type = document.getElementById('met-type').value;
+  if (!reach && !likes && !saves && !comments && !reposts) return;
+  document.getElementById('stats-loading').style.display = 'flex';
+  document.getElementById('stats-result').innerHTML = '';
+  var prompt = 'Analyste Instagram pour Djibril (@djib.prod), photographe ' + type + ' Sartrouville IDF. Record : 10 851 vues, 59 reposts, 8 saves. Strategie 70/30. Portee:' + (reach||0) + ', likes:' + (likes||0) + ', saves:' + (saves||0) + ', commentaires:' + (comments||0) + ', reposts:' + (reposts||0) + '. JSON sans backticks : {"score":(0-10),"verdict":"1 phrase","attraction":[{"titre":"...","texte":"...","p":"h|n"}],"conversion":[{"titre":"...","texte":"...","p":"h|n"}],"prochain":"1-2 phrases concretes"}';
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model: 'claude-sonnet-4-20250514', max_tokens: 900, messages: [{role: 'user', content: prompt}]})
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    var txt = '';
+    if (d.content) { for (var i = 0; i < d.content.length; i++) { if (d.content[i].text) txt += d.content[i].text; } }
+    txt = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+    try {
+      var ana = JSON.parse(txt);
+      var sc = ana.score >= 7 ? 'var(--gn)' : ana.score >= 5 ? 'var(--or)' : 'var(--rd)';
+      var html = '<div class="card mt2"><div style="display:flex;align-items:center;justify-content:space-between"><div class="ct" style="margin-bottom:0">Score</div><div style="font-family:Bebas Neue,sans-serif;font-size:1.8rem;color:var(--ac)">' + ana.score + '/10</div></div><div class="sbar"><div class="sfil" style="width:' + (ana.score*10) + '%;background:' + sc + '"></div></div><div class="ins mt1" style="margin-bottom:0"><div class="ix">' + ana.verdict + '</div></div></div>';
+      if (ana.attraction && ana.attraction.length > 0) {
+        html += '<div class="card mt2"><div class="ct">👁 Attirer plus de monde</div>';
+        for (var i = 0; i < ana.attraction.length; i++) {
+          var a = ana.attraction[i];
+          html += '<div class="ins ' + (a.p === 'h' ? 'o' : 'b') + '"><div class="it">' + a.titre + '</div><div class="ix">' + a.texte + '</div></div>';
+        }
+        html += '</div>';
+      }
+      if (ana.conversion && ana.conversion.length > 0) {
+        html += '<div class="card mt2"><div class="ct">💰 Convertir en clients</div>';
+        for (var j = 0; j < ana.conversion.length; j++) {
+          var cv = ana.conversion[j];
+          html += '<div class="ins ' + (cv.p === 'h' ? 'g' : 'p') + '"><div class="it">' + cv.titre + '</div><div class="ix">' + cv.texte + '</div></div>';
+        }
+        html += '</div>';
+      }
+      if (ana.prochain) {
+        html += '<div class="card mt2"><div class="ct">🚀 Prochain post</div><div class="ins g" style="margin-bottom:0"><div class="ix">' + ana.prochain + '</div></div><button class="btn bp mt1" onclick="goTab(\'plan\')">Planifier →</button></div>';
+      }
+      document.getElementById('stats-result').innerHTML = html;
+    } catch(e) {
+      document.getElementById('stats-result').innerHTML = '<div class="card"><div class="ins r"><div class="it">Erreur</div><div class="ix">Réessaie dans quelques secondes.</div></div></div>';
+    }
+    document.getElementById('stats-loading').style.display = 'none';
+  }).catch(function() {
+    document.getElementById('stats-loading').style.display = 'none';
+    document.getElementById('stats-result').innerHTML = '<div class="card"><div class="ins r"><div class="it">Erreur réseau</div><div class="ix">Vérifie ta connexion.</div></div></div>';
+  });
+}
+
+// INIT
+window.onload = function() {
+  goTab('home');
+  renderScenarios();
+  calcRevenu();
+};
+</script>
+</body>
+</html>

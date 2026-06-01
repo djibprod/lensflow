@@ -1,0 +1,22 @@
+{
+  "name": "LensFlow",
+  "short_name": "LensFlow",
+  "description": "Community Manager IA pour @djib.prod",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#c8a96e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/c8a96e/0a0a0f?text=LF",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/c8a96e/0a0a0f?text=LF",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
