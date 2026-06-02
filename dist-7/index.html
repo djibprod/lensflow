@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>LensFlow — @djib.prod</title>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#c8a96e"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="LensFlow"/>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--card:#12121a;--c2:#1a1a26;--br:rgba(255,255,255,0.08);
+  --ac:#c8a96e;--ac2:#7c6fff;--tx:#f0ede8;--mu:#7a7a8c;
+  --gn:#4ade80;--rd:#f87171;--bl:#38bdf8;--or:#fb923c;--nh:62px}
+html,body{background:var(--bg);color:var(--tx);font-family:'Barlow',sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.main{flex:1;padding:18px 14px 100px}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;
+  height:var(--nh);background:var(--card);border-top:1px solid var(--br);
+  display:flex;align-items:center;justify-content:space-around;z-index:100}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 6px;
+  border-radius:10px;border:none;background:transparent;cursor:pointer;flex:1}
+.ni .ic{font-size:1.1rem}
+.ni .lb{font-size:0.52rem;color:var(--mu);font-family:'Barlow',sans-serif;font-weight:600}
+.ni.on .lb{color:var(--ac)}
+.ni.on{background:rgba(200,169,110,0.08)}
+.tab{display:none}
+.ph{margin-bottom:16px;padding-top:4px}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;letter-spacing:.03em}
+.ps{color:var(--mu);font-size:0.75rem;margin-top:3px}
+.card{background:var(--card);border:1px solid var(--br);border-radius:14px;padding:14px;margin-bottom:10px}
+.ct{font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:10px}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.kc{background:var(--card);border:1px solid var(--br);border-radius:12px;padding:12px}
+.kv{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--ac);letter-spacing:.02em}
+.kl{font-size:0.7rem;color:var(--mu);margin-top:2px}
+.kt{font-size:0.65rem;margin-top:3px}
+.up{color:var(--gn)}.warn{color:var(--or)}.bad{color:var(--rd)}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.65rem;background:rgba(200,169,110,0.12);color:var(--ac);margin:2px}
+.tg{background:rgba(74,222,128,0.12);color:var(--gn)}
+.tb{background:rgba(56,189,248,0.12);color:var(--bl)}
+.tp{background:rgba(124,111,255,0.12);color:var(--ac2)}
+.to{background:rgba(251,146,60,0.12);color:var(--or)}
+.btn{padding:12px 16px;border-radius:11px;border:none;cursor:pointer;font-family:'Barlow',sans-serif;
+  font-size:0.9rem;font-weight:700;display:block;width:100%;text-align:center;margin-bottom:7px;
+  text-decoration:none;letter-spacing:.02em}
+.bp{background:var(--ac);color:#0a0a0f}
+.bg2{background:var(--c2);color:var(--tx);border:1px solid var(--br)}
+.bmeta{background:#1877f2;color:#fff}
+.big{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}
+.bgn{background:rgba(74,222,128,0.12);color:var(--gn);border:1px solid rgba(74,222,128,0.25)}
+.btn:disabled{opacity:.4}
+input,textarea,select{background:var(--c2);border:1px solid var(--br);border-radius:9px;color:var(--tx);
+  font-family:'Barlow',sans-serif;font-size:0.88rem;padding:11px 12px;outline:none;
+  width:100%;-webkit-appearance:none;display:block;margin-bottom:10px}
+input:focus,textarea:focus,select:focus{border-color:var(--ac)}
+textarea{resize:vertical;min-height:85px}
+label{font-size:0.73rem;color:var(--mu);display:block;margin-bottom:5px}
+.ins{background:var(--c2);border-left:3px solid var(--ac);border-radius:0 9px 9px 0;padding:11px 12px;margin-bottom:9px}
+.ins.g{border-left-color:var(--gn)}.ins.b{border-left-color:var(--bl)}
+.ins.p{border-left-color:var(--ac2)}.ins.r{border-left-color:var(--rd)}.ins.o{border-left-color:var(--or)}
+.it{font-size:0.78rem;font-weight:700;margin-bottom:2px}
+.ix{font-size:0.72rem;color:var(--mu);line-height:1.5}
+.ntc{background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.2);border-radius:11px;padding:11px 12px;margin-bottom:12px}
+.nt{font-size:0.76rem;font-weight:700;color:var(--bl);margin-bottom:3px}
+.nx{font-size:0.71rem;color:var(--mu);line-height:1.45}
+.nw{background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:11px;padding:11px 12px;margin-bottom:12px}
+.nw .nt{color:var(--or)}
+.stp{display:flex;gap:10px;margin-bottom:12px}
+.sn{width:26px;height:26px;border-radius:50%;background:rgba(200,169,110,0.15);color:var(--ac);
+  font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sc{flex:1}.stit{font-size:0.82rem;font-weight:700;margin-bottom:2px}
+.sdsc{font-size:0.71rem;color:var(--mu);line-height:1.45}
+.ebox{background:var(--c2);border:1px solid rgba(200,169,110,0.25);border-radius:11px;padding:12px;position:relative;margin-bottom:9px}
+.elbl{font-size:0.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ac);margin-bottom:7px}
+.etxt{font-size:0.78rem;line-height:1.6;white-space:pre-wrap;color:var(--tx);padding-right:55px;word-break:break-word}
+.cbtn{position:absolute;top:9px;right:9px;background:rgba(200,169,110,0.15);border:none;
+  border-radius:7px;padding:4px 9px;color:var(--ac);font-size:0.68rem;cursor:pointer;
+  font-family:'Barlow',sans-serif;font-weight:700;white-space:nowrap}
+.sbar{background:var(--c2);border-radius:6px;height:7px;margin-top:7px;overflow:hidden}
+.sfil{height:100%;border-radius:6px;transition:width .5s}
+.row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--br)}
+.row:last-child{border-bottom:none}
+.qcard{background:var(--c2);border:1px solid var(--br);border-radius:12px;padding:12px;margin-bottom:9px}
+.qt{font-size:0.68rem;color:var(--ac);font-weight:700}
+.loader{display:flex;gap:4px;align-items:center;padding:16px 0;justify-content:center}
+.loader span{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:boun .8s infinite}
+.loader span:nth-child(2){animation-delay:.15s}.loader span:nth-child(3){animation-delay:.3s}
+.lt{font-size:0.76rem;color:var(--mu);margin-left:7px}
+@keyframes boun{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-8px)}}
+.dvd{height:1px;background:var(--br);margin:12px 0}
+.ratio-bar{display:flex;border-radius:8px;overflow:hidden;height:28px;margin-bottom:10px}
+.ratio-pro{background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#0a0a0f;flex:7}
+.ratio-life{background:var(--ac2);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex:3}
+.ctype{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:0.68rem;font-weight:700;margin:2px}
+.ctype-pro{background:rgba(200,169,110,0.12);color:var(--ac)}
+.ctype-life{background:rgba(124,111,255,0.12);color:var(--ac2)}
+.prog{display:flex;gap:6px;margin-bottom:16px}
+.pbar{flex:1;height:3px;border-radius:3px;background:var(--c2)}
+.pbar.on{background:var(--ac)}
+.xs{font-size:0.7rem}.mu{color:var(--mu)}.ac2{color:var(--ac)}
+.mt1{margin-top:6px}.mt2{margin-top:12px}
+.hidden{display:none}
+.ih{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--ac);margin-bottom:3px}
+.icard{background:var(--c2);border:1px solid var(--br);border-radius:12px;padding:12px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="main">
+
+<!-- ACCUEIL -->
+<div class="tab" id="tab-home">
+  <div class="ph"><div class="pt">Bonjour Djibril 👋</div><div class="ps">@djib.prod · Sartrouville, IDF</div></div>
+  <a href="https://www.instagram.com/djib.prod/" target="_blank" class="btn big">Voir mon profil Instagram →</a>
+  <div class="kg">
+    <div class="kc"><div class="kv">361</div><div class="kl">Abonnés</div><div class="kt warn">Objectif 2-3K</div></div>
+    <div class="kc"><div class="kv">10.8K</div><div class="kl">Vues record</div><div class="kt up">Ton record ✓</div></div>
+    <div class="kc"><div class="kv">450€</div><div class="kl">Tarif mariage</div><div class="kt bad">→ 800-1200€</div></div>
+    <div class="kc"><div class="kv">0€</div><div class="kl">Ce mois</div><div class="kt warn">Objectif 5K€</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">Objectif — Fin 2026</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div><div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gn);line-height:1">5 000 – 7 000€</div>
+      <div style="font-size:0.72rem;color:var(--mu)">par mois · auto-entrepreneur exclusif</div></div>
+      <button class="btn bp" style="width:auto;padding:8px 14px;font-size:0.75rem;margin-bottom:0" onclick="goTab('fin')">Simuler →</button>
+    </div>
+    <div class="sbar"><div class="sfil" style="width:8%;background:var(--or)"></div></div>
+    <div style="font-size:0.7rem;color:var(--mu);margin-top:6px">Étape : poser les bases · Juin–Août 2026</div>
+  </div>
+  <div class="card">
+    <div class="ct">Ton écosystème</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--c2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.4rem">📸</div>
+        <div style="flex:1"><div style="font-size:0.82rem;font-weight:700;color:var(--ac)">@djib.prod</div>
+        <div style="font-size:0.7rem;color:var(--mu)">Ta marque perso · Particuliers + directs</div></div>
+        <a href="https://www.instagram.com/djib.prod/" target="_blank" style="font-size:0.68rem;background:rgba(200,169,110,0.15);color:var(--ac);padding:4px 9px;border-radius:7px;text-decoration:none;font-weight:700">Voir</a>
+      </div>
+      <div style="background:var(--c2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.4rem">🎬</div>
+        <div style="flex:1"><div style="font-size:0.82rem;font-weight:700;color:var(--ac2)">@bruitblanc__</div>
+        <div style="font-size:0.7rem;color:var(--mu)">Boîte de prod · Marques + agences B2B</div></div>
+        <a href="https://www.instagram.com/bruitblanc__/" target="_blank" style="font-size:0.68rem;background:rgba(124,111,255,0.15);color:var(--ac2);padding:4px 9px;border-radius:7px;text-decoration:none;font-weight:700">Voir</a>
+      </div>
+      <div style="background:var(--c2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:12px">
+        <div style="font-size:1.4rem">🤝</div>
+        <div style="flex:1"><div style="font-size:0.82rem;font-weight:700;color:var(--bl)">@bloodpict</div>
+        <div style="font-size:0.7rem;color:var(--mu)">Associé · Collabs croisées</div></div>
+        <a href="https://www.instagram.com/bloodpict/" target="_blank" style="font-size:0.68rem;background:rgba(56,189,248,0.15);color:var(--bl);padding:4px 9px;border-radius:7px;text-decoration:none;font-weight:700">Voir</a>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Règle d'or — 70% Pro / 30% Toi</div>
+    <div class="ratio-bar"><div class="ratio-pro">70% TON TRAVAIL</div><div class="ratio-life">30% TOI</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(200,169,110,0.07);border-radius:9px;padding:10px">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--ac);margin-bottom:6px">70% — Ton travail</div>
+        <div style="font-size:0.7rem;color:var(--mu);line-height:1.6">📸 Mariages<br>🚗 Auto<br>🏆 Sport<br>🍽️ Food<br>✏️ Avant/après<br>🎬 BTS</div>
+      </div>
+      <div style="background:rgba(124,111,255,0.07);border-radius:9px;padding:10px">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--ac2);margin-bottom:6px">30% — Toi</div>
+        <div style="font-size:0.7rem;color:var(--mu);line-height:1.6">🚗 Trajet<br>🎒 Setup<br>😂 Coulisses<br>💭 Regard<br>📍 Paris/IDF<br>🎯 Processus</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Ta semaine type</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">📸</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Lundi</div><div style="font-size:0.7rem;color:var(--mu)">Reel — Résultat shooting</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">🎭</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Mardi</div><div style="font-size:0.7rem;color:var(--mu)">Story — Ton quotidien</div></div><span class="ctype ctype-life">30%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">✏️</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Mercredi</div><div style="font-size:0.7rem;color:var(--mu)">Carrousel — Avant/après</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">🎬</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Jeudi</div><div style="font-size:0.7rem;color:var(--mu)">Reel — BTS shooting</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">💬</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Vendredi</div><div style="font-size:0.7rem;color:var(--mu)">Story — Teaser week-end</div></div><span class="ctype ctype-life">30%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--br)"><div style="width:24px">🏆</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Samedi</div><div style="font-size:0.7rem;color:var(--mu)">Post — Portfolio client tagué</div></div><span class="ctype ctype-pro">70%</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0"><div style="width:24px">💭</div><div style="flex:1"><div style="font-size:0.78rem;font-weight:700">Dimanche</div><div style="font-size:0.7rem;color:var(--mu)">Story — Ton regard sur la semaine</div></div><span class="ctype ctype-life">30%</span></div>
+    <button class="btn bp mt1" onclick="goTab('plan')">Planifier un post →</button>
+  </div>
+  <div class="card">
+    <div class="ct">Ton Reel record</div>
+    <a href="https://www.instagram.com/reel/DQCWes-CBq2/" target="_blank" class="btn big" style="font-size:0.76rem;padding:9px;margin-bottom:10px">Voir le Reel (10 851 vues) →</a>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--ac)">10 851</div><div class="xs mu">Vues</div></div>
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gn)">236</div><div class="xs mu">Likes</div></div>
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--bl)">59</div><div class="xs mu">Reposts</div></div>
+      <div style="text-align:center;flex:1;min-width:55px"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--rd)">8</div><div class="xs mu">Saves</div></div>
+    </div>
+    <div class="ins o"><div class="it">⚡ Accroche 3 premières secondes</div><div class="ix">76% taux ignoré. Commence par ton meilleur plan, texte overlay immédiat.</div></div>
+    <div class="ins p"><div class="it">🔁 Effet loop</div><div class="ix">Vue moyenne 7s/33s. La fin doit rappeler le début.</div></div>
+    <div class="ins b"><div class="it">💾 Pousse les sauvegardes</div><div class="ix">Ajoute : "Sauvegarde si tu cherches un photographe 📌"</div></div>
+    <div class="ins g"><div class="it">💰 CTA clair</div><div class="ix">"DM pour réserver 📸" à chaque post.</div></div>
+  </div>
+</div>
+
+<!-- REGULARITE -->
+<div class="tab" id="tab-reg">
+  <div class="ph"><div class="pt">Régularité</div><div class="ps">3 posts/semaine · Ne casse pas la chaîne 🔥</div></div>
+
+  <!-- Streak -->
+  <div class="card" style="text-align:center;padding:20px">
+    <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:6px">Streak actuel</div>
+    <div style="font-family:Bebas Neue,sans-serif;font-size:4rem;color:var(--ac);line-height:1" id="streak-count">0</div>
+    <div style="font-size:0.8rem;color:var(--mu);margin-bottom:12px">semaines consécutives à 3 posts</div>
+    <div style="display:flex;justify-content:center;gap:6px;margin-bottom:12px" id="streak-flames"></div>
+    <div id="streak-msg" style="font-size:0.78rem;color:var(--mu)"></div>
+  </div>
+
+  <!-- Semaine en cours -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="ct" style="margin-bottom:0">Cette semaine</div>
+      <div id="week-label" style="font-size:0.72rem;color:var(--mu)"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px" id="week-dots"></div>
+    <div style="background:var(--c2);border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px">
+      <div id="week-bar" style="height:100%;border-radius:8px;background:var(--ac);transition:width .5s;width:0%"></div>
+    </div>
+    <div id="week-status" style="font-size:0.78rem;color:var(--mu);text-align:center;margin-bottom:12px"></div>
+    <button class="btn bp" onclick="logPost()" id="log-btn">✓ J'ai posté aujourd'hui</button>
+    <button class="btn bg2" onclick="undoPost()" id="undo-btn" style="display:none">← Annuler le dernier post</button>
+  </div>
+
+  <!-- Règle 70/30 rappel -->
+  <div class="card">
+    <div class="ct">Équilibre de la semaine — 70/30</div>
+    <div id="balance-display"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn bp" style="flex:1;font-size:0.75rem" onclick="logPostType('pro')">+ Post 70% Pro</button>
+      <button class="btn bg2" style="flex:1;font-size:0.75px;border-color:var(--ac2);color:var(--ac2);font-size:0.75rem" onclick="logPostType('life')">+ Story 30% Toi</button>
+    </div>
+  </div>
+
+  <!-- Historique semaines -->
+  <div class="card">
+    <div class="ct">Historique — 8 dernières semaines</div>
+    <div id="weeks-history"></div>
+  </div>
+
+  <!-- Conseil de la semaine -->
+  <div class="card">
+    <div class="ct">💡 Rappel régularité</div>
+    <div class="ins o"><div class="it">L'algorithme te punit si tu t'arrêtes</div><div class="ix">Après 3 jours sans post, Instagram réduit ta portée. 3 posts/semaine = minimum pour rester visible.</div></div>
+    <div class="ins g"><div class="it">La chaîne crée l'habitude</div><div class="ix">Ne te demande pas si tu as envie de poster. Poste parce que c'est l'heure. L'inspiration suit l'action.</div></div>
+    <div class="ins b"><div class="it">Ton stock est ta sécurité</div><div class="ix">Tu as du contenu disponible. Les jours sans inspiration, tu pioches dans le stock. Pas d'excuse.</div></div>
+  </div>
+
+  <!-- Idées de contenu -->
+  <div class="card">
+    <div class="ct">💡 Idées qui marchent — basées sur tes niches</div>
+    <div class="ntc" style="margin-bottom:12px">
+      <div class="nt">Basé sur tes stats réelles</div>
+      <div class="nx">Ton Reel Bruit Blanc a fait 10 851 vues avec 59 reposts. Ces idées reproduisent les mêmes mécaniques.</div>
+    </div>
+
+    <!-- Filtres niches -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px" id="idea-filters">
+      <button onclick="filterIdeas('all')" id="ifilter-all" style="padding:5px 10px;border-radius:20px;border:none;background:var(--ac);color:#0a0a0f;font-family:Barlow,sans-serif;font-weight:700;font-size:0.7rem;cursor:pointer">Tout</button>
+      <button onclick="filterIdeas('auto')" id="ifilter-auto" style="padding:5px 10px;border-radius:20px;border:none;background:var(--c2);color:var(--mu);font-family:Barlow,sans-serif;font-weight:700;font-size:0.7rem;cursor:pointer">🚗 Auto</button>
+      <button onclick="filterIdeas('mariage')" id="ifilter-mariage" style="padding:5px 10px;border-radius:20px;border:none;background:var(--c2);color:var(--mu);font-family:Barlow,sans-serif;font-weight:700;font-size:0.7rem;cursor:pointer">💍 Mariage</button>
+      <button onclick="filterIdeas('sport')" id="ifilter-sport" style="padding:5px 10px;border-radius:20px;border:none;background:var(--c2);color:var(--mu);font-family:Barlow,sans-serif;font-weight:700;font-size:0.7rem;cursor:pointer">🏆 Sport</button>
+      <button onclick="filterIdeas('lifestyle')" id="ifilter-lifestyle" style="padding:5px 10px;border-radius:20px;border:none;background:var(--c2);color:var(--mu);font-family:Barlow,sans-serif;font-weight:700;font-size:0.7rem;cursor:pointer">🎭 Toi</button>
+    </div>
+
+    <div id="ideas-list"></div>
+  </div>
+</div>
+
+<!-- PLANNING -->
+<div class="tab" id="tab-cal">
+  <div class="ph"><div class="pt">Planning</div><div class="ps">Calé sur tes prestations + 70/30</div></div>
+  <div class="card">
+    <div class="ct">Prestations Juin 2026</div>
+    <div class="row"><div><div style="font-size:0.85rem;font-weight:700">Sam 6 juin</div><div class="xs mu">💍 Mariage</div></div><span class="tag tp">Prestation</span></div>
+    <div class="row"><div><div style="font-size:0.85rem;font-weight:700">Sam 13 juin</div><div class="xs mu">💍 Mariage</div></div><span class="tag tp">Prestation</span></div>
+    <div class="row"><div><div style="font-size:0.85rem;font-weight:700">Sam 20 juin</div><div class="xs mu">💍 Mariage</div></div><span class="tag tp">Prestation</span></div>
+  </div>
+  <div class="card mt2"><div class="ct">Posts recommandés</div><div class="ntc"><div class="nt">💡 Logique 70/30</div><div class="nx">Veille = Story toi (30%) · Lendemain = Reel résultat (70%) · J+3 = Carrousel best of (70%)</div></div><div id="smart-plan"></div></div>
+  <div class="card mt2"><div class="ct">Ma file d'attente (<span id="queue-count">0</span>)</div><div id="queue-list"><div style="text-align:center;padding:20px;color:var(--mu);font-size:0.78rem">Aucun post — utilise l'onglet Publier</div></div><button class="btn bp mt1" onclick="goTab('plan')">+ Planifier un post</button></div>
+</div>
+
+<!-- REVENUS -->
+<div class="tab" id="tab-fin">
+  <div class="ph"><div class="pt">Revenus</div><div class="ps">Objectif : 5 000 – 7 000€/mois</div></div>
+  <div class="card">
+    <div class="ct">Simulateur mensuel</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div><label>Mariages</label><input type="number" id="nb-mariages" value="3" min="0" oninput="calcRevenu()"/></div>
+      <div><label>Tarif mariage (€)</label><input type="number" id="tarif-mariage" value="450" oninput="calcRevenu()"/></div>
+      <div><label>Shootings</label><input type="number" id="nb-autres" value="0" min="0" oninput="calcRevenu()"/></div>
+      <div><label>Tarif shooting (€)</label><input type="number" id="tarif-autres" value="500" oninput="calcRevenu()"/></div>
+      <div><label>Contrats récurrents</label><input type="number" id="nb-recurrents" value="0" min="0" oninput="calcRevenu()"/></div>
+      <div><label>Tarif contrat (€)</label><input type="number" id="tarif-recurrents" value="500" oninput="calcRevenu()"/></div>
+    </div>
+    <div style="background:var(--c2);border-radius:12px;padding:14px;text-align:center;margin-bottom:10px">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:4px">Revenu estimé</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem" id="total-revenu">2 700€</div>
+      <div id="objectif-status" style="font-size:0.78rem;margin-top:4px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--mu);margin-bottom:4px"><span>0€</span><span>5 000€</span><span>7 000€</span></div>
+    <div class="sbar" style="height:10px;margin-bottom:6px"><div id="revenu-bar" style="height:100%;border-radius:6px;background:var(--ac);width:0%;transition:width .5s"></div></div>
+    <div id="revenu-manque" style="font-size:0.75rem;color:var(--mu);text-align:center"></div>
+  </div>
+  <div class="card"><div class="ct">Scénarios pour 5 000€/mois</div><div id="scenarios-list"></div></div>
+  <div class="card">
+    <div class="ct">Dépendance Reebsa — Ton risque</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <div style="text-align:center;background:var(--c2);border-radius:8px;padding:10px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--or)">90%</div><div style="font-size:0.68rem;color:var(--mu)">Reebsa</div></div>
+      <div style="text-align:center;background:var(--c2);border-radius:8px;padding:10px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gn)">10%</div><div style="font-size:0.68rem;color:var(--mu)">Direct</div></div>
+    </div>
+    <div style="display:flex;border-radius:8px;overflow:hidden;height:24px;margin-bottom:8px">
+      <div style="background:var(--or);flex:5;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#fff">50% Reebsa</div>
+      <div style="background:var(--gn);flex:5;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#0a0a0f">50% Direct</div>
+    </div>
+    <div style="font-size:0.7rem;color:var(--mu)">Objectif fin 2026 — Instagram = ta clientèle propre</div>
+  </div>
+  <div class="card">
+    <div class="ct">Roadmap — Indépendance totale</div>
+    <div class="stp"><div class="sn" style="background:rgba(200,169,110,0.15);color:var(--ac)">1</div><div class="sc"><div class="stit">Juin–Août — Poser les bases</div><div class="sdsc">4 posts/sem · Tarif → 800€ · Contacter 2 restaurants</div></div></div>
+    <div class="stp"><div class="sn" style="background:rgba(56,189,248,0.15);color:var(--bl)">2</div><div class="sc"><div class="stit">Septembre — Premier palier</div><div class="sdsc">3 000€/mois · 1er client direct Instagram · 500-800 abonnés</div></div></div>
+    <div class="stp"><div class="sn" style="background:rgba(124,111,255,0.15);color:var(--ac2)">3</div><div class="sc"><div class="stit">Oct–Nov — Accélération</div><div class="sdsc">DMs entrants · Marques auto + sportifs · Tarif → 1 000€</div></div></div>
+    <div class="stp"><div class="sn" style="background:rgba(74,222,128,0.15);color:var(--gn)">4</div><div class="sc"><div class="stit">Décembre — Objectif ✓</div><div class="sdsc">5 000-7 000€/mois · Intérim arrêté · 50% clients directs</div></div></div>
+  </div>
+  <div class="card">
+    <div class="ct">⚡ Actions cette semaine</div>
+    <div class="stp"><div class="sn">1</div><div class="sc"><div class="stit">Tarif mariage → 800€</div><div class="sdsc">Mets à jour ton portfolio et ta bio Instagram.</div></div></div>
+    <div class="stp"><div class="sn">2</div><div class="sc"><div class="stit">Contacte 2 restaurants</div><div class="sdsc">Majestea, Mistral ou Mood Thai — contrat 400-500€/mois.</div></div></div>
+    <div class="stp"><div class="sn">3</div><div class="sc"><div class="stit">Poste 3 fois cette semaine</div><div class="sdsc">Stock disponible — pas besoin d'un nouveau shooting.</div></div></div>
+  </div>
+</div>
+
+<!-- ANALYSE -->
+<div class="tab" id="tab-stats">
+  <div class="ph"><div class="pt">Analyser</div><div class="ps">Ton historique · Tes patterns · Tes prochaines actions</div></div>
+
+  <!-- Tabs internes -->
+  <div style="display:flex;gap:0;margin-bottom:14px;background:var(--c2);border-radius:11px;padding:3px">
+    <button id="atab-new" onclick="switchATab('new')" style="flex:1;padding:8px;border:none;border-radius:8px;background:var(--ac);color:#0a0a0f;font-family:Barlow,sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer">+ Nouveau post</button>
+    <button id="atab-history" onclick="switchATab('history')" style="flex:1;padding:8px;border:none;border-radius:8px;background:transparent;color:var(--mu);font-family:Barlow,sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer">Historique</button>
+    <button id="atab-patterns" onclick="switchATab('patterns')" style="flex:1;padding:8px;border:none;border-radius:8px;background:transparent;color:var(--mu);font-family:Barlow,sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer">Patterns</button>
+  </div>
+
+  <!-- TAB: Nouveau post -->
+  <div id="apanel-new">
+    <div class="ntc"><div class="nt">📊 Attends 24-48h après publication</div><div class="nx">Instagram → ton post → "Voir les statistiques" pour avoir des données fiables.</div></div>
+    <div class="card">
+      <div class="ct">Infos du post</div>
+      <label>Type de post</label>
+      <select id="met-type"><option>Carrousel</option><option>Reel</option><option>Post</option><option>Story</option></select>
+      <label>Niche</label>
+      <select id="met-niche">
+        <option value="lifestyle">🎭 Lifestyle / Toi</option>
+        <option value="auto">🚗 Automobile</option>
+        <option value="mariage">💍 Mariage</option>
+        <option value="sport">🏆 Sport</option>
+        <option value="food">🍽️ Food</option>
+        <option value="evenement">🎉 Événementiel</option>
+      </select>
+      <label>Description courte</label>
+      <input type="text" id="met-desc" placeholder="Ex: Carrousel LA avec amis, ambiance décontractée"/>
+      <label>Date de publication</label>
+      <input type="date" id="met-date"/>
+    </div>
+    <div class="card">
+      <div class="ct">Métriques principales</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label>Comptes touchés</label><input type="number" inputmode="numeric" id="met-reach" placeholder="0"/></div>
+        <div><label>Vues (Reels)</label><input type="number" inputmode="numeric" id="met-views" placeholder="0"/></div>
+        <div><label>Likes</label><input type="number" inputmode="numeric" id="met-likes" placeholder="0"/></div>
+        <div><label>Commentaires</label><input type="number" inputmode="numeric" id="met-comments" placeholder="0"/></div>
+        <div><label>Sauvegardes ★</label><input type="number" inputmode="numeric" id="met-saves" placeholder="0"/></div>
+        <div><label>Republications</label><input type="number" inputmode="numeric" id="met-reposts" placeholder="0"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Métriques avancées (si dispo)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><label>Nouveaux abonnés</label><input type="number" inputmode="numeric" id="met-followers" placeholder="0"/></div>
+        <div><label>Visites profil</label><input type="number" inputmode="numeric" id="met-profile" placeholder="0"/></div>
+        <div><label>Clics lien bio</label><input type="number" inputmode="numeric" id="met-link" placeholder="0"/></div>
+        <div><label>Taux ignoré % (Reel)</label><input type="number" inputmode="numeric" id="met-skip" placeholder="0"/></div>
+      </div>
+    </div>
+    <button class="btn bp" onclick="analyzeStats()">∿ Lancer le diagnostic complet</button>
+    <div id="stats-loading" style="display:none;margin-top:12px" class="loader"><span></span><span></span><span></span><span class="lt">Analyse en cours…</span></div>
+    <div id="stats-result"></div>
+
+    <!-- Records fixes -->
+    <div class="card mt2">
+      <div class="ct">Benchmarks — Ton profil</div>
+      <div class="row"><span class="xs mu">Vues record (Reel)</span><div style="text-align:right"><div class="xs mu">10 851</div><div class="xs ac2">Objectif : 15 000+</div></div></div>
+      <div class="row"><span class="xs mu">Republications record</span><div style="text-align:right"><div class="xs mu">59 (0.54%)</div><div class="xs ac2">Objectif : 0.6%+</div></div></div>
+      <div class="row"><span class="xs mu">Sauvegardes record</span><div style="text-align:right"><div class="xs mu">8</div><div class="xs ac2" style="color:var(--rd)">Objectif : 50+</div></div></div>
+      <div class="row"><span class="xs mu">Taux ignoré</span><div style="text-align:right"><div class="xs mu">76,3%</div><div class="xs ac2">Objectif : &lt;50%</div></div></div>
+      <div class="row"><span class="xs mu">Abonnés</span><div style="text-align:right"><div class="xs mu">361</div><div class="xs ac2">Objectif : 2 000+</div></div></div>
+    </div>
+  </div>
+
+  <!-- TAB: Historique -->
+  <div id="apanel-history" style="display:none">
+    <div id="history-empty" class="card" style="text-align:center;padding:32px 16px">
+      <div style="font-size:2rem;margin-bottom:8px">📊</div>
+      <div style="font-size:0.82rem;font-weight:700;margin-bottom:6px">Aucun post analysé encore</div>
+      <div class="xs mu">Lance ton premier diagnostic dans l onglet "Nouveau post".<br>Chaque analyse est sauvegardée ici.</div>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- TAB: Patterns -->
+  <div id="apanel-patterns" style="display:none">
+    <div id="patterns-empty" class="card" style="text-align:center;padding:32px 16px">
+      <div style="font-size:2rem;margin-bottom:8px">🔍</div>
+      <div style="font-size:0.82rem;font-weight:700;margin-bottom:6px">Analyse les patterns</div>
+      <div class="xs mu">Après 3 posts analysés, cette section identifie automatiquement ce qui performe le mieux chez toi.</div>
+    </div>
+    <div id="patterns-content" style="display:none">
+      <div class="ntc"><div class="nt">🔍 Tes patterns personnels</div><div class="nx">Basé sur tous tes posts analysés — ce qui marche vraiment pour @djib.prod.</div></div>
+      <div id="patterns-list"></div>
+      <div class="card mt2">
+        <div class="ct">🎯 Recommandation IA basée sur tes données</div>
+        <button class="btn bp" onclick="analyzePatterns()">Analyser mes patterns</button>
+        <div id="patterns-result" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inspiration -->
+  <div class="card mt2">
+    <div class="ct">Comptes à étudier</div>
+    <div class="icard"><span class="tag">🚗 Auto</span><div class="ih">@e_lphotography</div><div style="font-size:0.73rem;margin-bottom:7px">93K 🇫🇷 — Mix 70/30 parfait. Montre ses mains, ses réactions.</div><a href="https://www.instagram.com/e_lphotography/" target="_blank" class="btn big" style="font-size:0.73rem;padding:9px">Ouvrir →</a></div>
+    <div class="icard"><span class="tag">💍 Mariage</span><div class="ih">@99mariages</div><div style="font-size:0.73rem;margin-bottom:7px">9 500 abonnés avec 15 posts 🇫🇷 — Qualité > quantité. Même zone géo.</div><a href="https://www.instagram.com/99mariages/" target="_blank" class="btn big" style="font-size:0.73rem;padding:9px">Ouvrir →</a></div>
+    <div class="icard"><span class="tag">🏆 Sport</span><div class="ih">@louisgarnierphotos</div><div style="font-size:0.73rem;margin-bottom:7px">Référence sport France 🇫🇷 — Histoires visuelles, freeze action.</div><a href="https://www.instagram.com/louisgarnierphotos/" target="_blank" class="btn big" style="font-size:0.73rem;padding:9px">Ouvrir →</a></div>
+  </div>
+</div>
+
+<nav class="bnav">
+  <button class="ni" id="nav-home" onclick="goTab('home')"><span class="ic">◈</span><span class="lb">Accueil</span></button>
+  <button class="ni" id="nav-reg" onclick="goTab('reg')"><span class="ic">🔥</span><span class="lb">Régularité</span></button>
+  <button class="ni" id="nav-cal" onclick="goTab('cal')"><span class="ic">📅</span><span class="lb">Planning</span></button>
+  <button class="ni" id="nav-fin" onclick="goTab('fin')"><span class="ic">💰</span><span class="lb">Revenus</span></button>
+  <button class="ni" id="nav-stats" onclick="goTab('stats')"><span class="ic">∿</span><span class="lb">Analyse</span></button>
+</nav>
+</div>
+
+<script>
+var currentTab = 'home';
+var currentStep = 1;
+var imgBase64 = null;
+var imgMime = null;
+var imgPreview = null;
+var generatedData = null;
+var queue = [];
+var TABS = ['home','reg','cal','fin','stats'];
+
+var SMART_PLAN = [
+  {jour:"Depuis LA", time:"19:00", type:"Story", cat:"life", label:"Un photographe à Los Angeles 🌴", reason:"30% Toi — lifestyle depuis LA"},
+  {jour:"Jeu 29 mai", time:"19:00", type:"Story", cat:"life", label:"Back in Paris 📸", reason:"30% Toi — annonce ton retour"},
+  {jour:"Ven 30 mai", time:"18:00", type:"Reel", cat:"pro", label:"Meilleure photo de ton stock", reason:"70% Pro — relance l'algo"},
+  {jour:"Sam 31 mai", time:"12:30", type:"Carrousel", cat:"pro", label:"Avant/après retouche mariage", reason:"70% Pro — sauvegardes élevées"},
+  {jour:"Lun 2 juin", time:"18:00", type:"Reel", cat:"pro", label:"Teaser mariage du 6 juin", reason:"70% Pro — 4 jours avant"},
+  {jour:"Mar 3 juin", time:"19:00", type:"Story", cat:"life", label:"Ton setup", reason:"30% Toi — coulisses"},
+  {jour:"Mer 4 juin", time:"18:00", type:"Post", cat:"pro", label:"Portfolio auto", reason:"70% Pro — tag garage"},
+  {jour:"Ven 5 juin", time:"19:00", type:"Story", cat:"life", label:"Shooting demain 🤫", reason:"30% Toi — veille mariage"},
+  {jour:"Lun 8 juin", time:"18:00", type:"Reel", cat:"pro", label:"Premières images mariage 6 juin", reason:"70% Pro — émotion maximale"},
+  {jour:"Mer 10 juin", time:"12:30", type:"Carrousel", cat:"pro", label:"Best of mariage 6 juin", reason:"70% Pro — sauvegardes"},
+  {jour:"Ven 12 juin", time:"19:00", type:"Story", cat:"life", label:"Shooting demain 🤫", reason:"30% Toi — veille mariage 13"},
+  {jour:"Lun 15 juin", time:"18:00", type:"Reel", cat:"pro", label:"Premières images mariage 13 juin", reason:"70% Pro"},
+  {jour:"Mer 17 juin", time:"12:30", type:"Carrousel", cat:"pro", label:"Best of mariage 13 juin", reason:"70% Pro"},
+  {jour:"Ven 19 juin", time:"19:00", type:"Story", cat:"life", label:"Shooting demain 🤫", reason:"30% Toi — veille mariage 20"},
+  {jour:"Lun 22 juin", time:"18:00", type:"Reel", cat:"pro", label:"Premières images mariage 20 juin", reason:"70% Pro"}
+];
+
+var SCENARIOS = [
+  {label:"Actuel", mariages:6, tarif:450, autres:0, ta:0, rec:0, tr:0},
+  {label:"Tarif 800€", mariages:6, tarif:800, autres:1, ta:500, rec:0, tr:0},
+  {label:"Objectif min", mariages:6, tarif:1000, autres:2, ta:500, rec:1, tr:500},
+  {label:"Objectif 7K€", mariages:7, tarif:1000, autres:2, ta:600, rec:2, tr:500}
+];
+
+function goTab(id) {
+  var i, el;
+  for (i = 0; i < TABS.length; i++) {
+    el = document.getElementById('tab-' + TABS[i]);
+    if (el) el.style.display = 'none';
+  }
+  el = document.getElementById('tab-' + id);
+  if (el) el.style.display = 'block';
+  var btns = document.querySelectorAll('.ni');
+  for (i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('on');
+  }
+  el = document.getElementById('nav-' + id);
+  if (el) el.classList.add('on');
+  currentTab = id;
+  if (id === 'cal') { renderSmartPlan(); renderQueue(); }
+  if (id === 'reg') { renderRegularite(); renderIdeas(); }
+  window.scrollTo(0, 0);
+}
+
+function goStep(n) {
+  var steps = ['step1','step2','step3','step3-err','step4'];
+  var i, el;
+  for (i = 0; i < steps.length; i++) {
+    el = document.getElementById(steps[i]);
+    if (el) el.style.display = 'none';
+  }
+  var subs = {1:"Décris ton contenu — l'IA génère tout", 2:"Génération en cours…", 3:"Vérifie le contenu", 4:"Prêt pour Meta Business Suite"};
+  document.getElementById('plan-sub').textContent = subs[n] || '';
+  var pbars = ['p1','p2','p3'];
+  for (i = 0; i < pbars.length; i++) {
+    el = document.getElementById(pbars[i]);
+    if (el) el.className = 'pbar' + (i < n ? ' on' : '');
+  }
+  var showId;
+  if (n === 3 && generatedData) showId = 'step3';
+  else if (n === 3 && !generatedData) showId = 'step3-err';
+  else showId = 'step' + n;
+  el = document.getElementById(showId);
+  if (el) el.style.display = 'block';
+  currentStep = n;
+}
+
+
+
+
+
+
+
+
+
+function resetPlan() {
+  generatedData = null;
+  var desc = document.getElementById('post-desc');
+  if (desc) desc.value = '';
+  goStep(1);
+}
+
+function updateLaterText() {
+  var cap = document.getElementById('edit-caption').value;
+  var hash = document.getElementById('result-hashtags').textContent;
+  document.getElementById('later-text').textContent = cap + '\n\n' + hash;
+}
+
+function generateContent() {
+  var desc = document.getElementById('post-desc').value.trim();
+  if (!desc) { alert('Décris ton contenu en 1-2 phrases avant de générer.'); return; }
+  var type = document.getElementById('post-type').value;
+  var niche = document.getElementById('post-niche').value;
+  goStep(2);
+
+  var nicheEmojis = {auto:'🚗', mariage:'💍', sport:'🏆', food:'🍽️', evenement:'🎉', lifestyle:'🎭'};
+  var emoji = nicheEmojis[niche] || '📸';
+
+  var prompt = "Tu es l'assistant Instagram de Djibril Kouadio (@djib.prod), photographe evenementiel, automobile et sportifs a Sartrouville IDF. Audience : 70% hommes. Record : 10 851 vues. Type : " + type + ". Niche : " + niche + ". Clients auto: ECAB,Wrapzone,TunInox. Mariage: Reebsa Production. Food: Majestea,Mistral,Mood Thai. Regle 70/30. Description du contenu : " + desc + ". Reponds UNIQUEMENT en JSON sans backticks : {\"description\":\"resume en 1 phrase\",\"categorie\":\"pro|lifestyle\",\"legende\":\"max 90 mots, humain et pro, CTA DM pour reserver\",\"hashtags\":\"5 hashtags separes par espaces\",\"bestTime\":\"ex: Jeudi 18h00\",\"clientTag\":\"client a taguer si pertinent ou vide\",\"conseil\":\"1 conseil court pour optimiser ce post\",\"ratioHint\":\"explication 70% ou 30%\"}";
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 900,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    var txt = '';
+    if (d.content) { for (var i = 0; i < d.content.length; i++) { if (d.content[i].text) txt += d.content[i].text; } }
+    txt = txt.replace(/```json/g,'').replace(/```/g,'').trim();
+    try {
+      generatedData = JSON.parse(txt);
+      var el = document.getElementById('result-emoji');
+      if (el) el.textContent = emoji;
+      document.getElementById('result-desc').textContent = generatedData.description || desc;
+      var tagsHtml = '<span class="ctype ' + (generatedData.categorie === 'pro' ? 'ctype-pro' : 'ctype-life') + '">' + (generatedData.categorie === 'pro' ? '70% Ton travail' : '30% Toi') + '</span>';
+      tagsHtml += ' <span class="tag">' + niche + '</span>';
+      if (generatedData.clientTag) tagsHtml += ' <span class="tag tb">@' + generatedData.clientTag + '</span>';
+      document.getElementById('result-tags').innerHTML = tagsHtml;
+      var hint = document.getElementById('result-ratio-hint');
+      hint.textContent = generatedData.ratioHint || '';
+      hint.style.background = generatedData.categorie === 'pro' ? 'rgba(200,169,110,0.08)' : 'rgba(124,111,255,0.08)';
+      hint.style.color = generatedData.categorie === 'pro' ? 'var(--ac)' : 'var(--ac2)';
+      document.getElementById('result-caption').textContent = generatedData.legende || '';
+      document.getElementById('edit-caption').value = generatedData.legende || '';
+      document.getElementById('result-hashtags').textContent = generatedData.hashtags || '';
+      document.getElementById('result-time').textContent = '⏰ Meilleur créneau — ' + (generatedData.bestTime || 'Jeudi 18h00');
+      document.getElementById('meta-slot').textContent = (generatedData.bestTime || 'Jeudi 18h00') + ' → Meta publie automatiquement';
+      var cons = document.getElementById('result-conseil');
+      if (generatedData.conseil) {
+        cons.innerHTML = '<div class="it">💡 Conseil</div><div class="ix">' + generatedData.conseil + '</div>';
+        cons.style.display = 'block';
+      }
+      document.getElementById('later-text').textContent = (generatedData.legende || '') + '\n\n' + (generatedData.hashtags || '');
+      goStep(3);
+    } catch(e) { generatedData = null; goStep(3); }
+  }).catch(function() { generatedData = null; goStep(3); });
+}
+
+function addToQueue() {
+  var caption = document.getElementById('edit-caption').value || (generatedData ? generatedData.legende : '');
+  var hashtags = generatedData ? generatedData.hashtags : '';
+  var date = document.getElementById('post-date').value || (generatedData ? generatedData.bestTime : 'À planifier');
+  var time = document.getElementById('post-time').value || '18:00';
+  var type = document.getElementById('post-type').value;
+  var cat = generatedData ? generatedData.categorie : 'pro';
+  var niche = document.getElementById('post-niche') ? document.getElementById('post-niche').value : 'auto';
+  queue.unshift({id: Date.now(), type: type, cat: cat, niche: niche, caption: caption, hashtags: hashtags, date: date, time: time, status: 'planifié'});
+  resetPlan();
+  goTab('cal');
+}
+
+function renderQueue() {
+  var c = document.getElementById('queue-list');
+  var count = document.getElementById('queue-count');
+  if (count) count.textContent = queue.length;
+  if (queue.length === 0) {
+    c.innerHTML = '<div style="text-align:center;padding:20px;color:var(--mu);font-size:0.78rem">Aucun post planifié</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < queue.length; i++) {
+    var p = queue[i];
+    var catBadge = '<span class="ctype ' + (p.cat === 'pro' ? 'ctype-pro' : 'ctype-life') + '">' + (p.cat === 'pro' ? '70%' : '30%') + '</span>';
+    var statusBadge = '<span class="tag ' + (p.status === 'publié' ? 'tg' : 'tb') + '">' + (p.status === 'publié' ? '✓ Publié' : '⏳ Meta') + '</span>';
+    var actionBtn = '';
+    if (p.status !== 'publié') {
+      actionBtn = '<button style="font-size:0.68rem;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:var(--gn);border-radius:7px;padding:3px 9px;cursor:pointer;font-family:Barlow,sans-serif;font-weight:700" onclick="markDone(' + p.id + ')">Marquer publié</button>';
+    }
+    var imgHtml = p.preview ? '<img src="' + p.preview + '" style="width:42px;height:42px;object-fit:cover;border-radius:7px;flex-shrink:0"/>' : '';
+    html += '<div class="qcard"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' + imgHtml + '<div style="flex:1"><div style="display:flex;align-items:center;justify-content:space-between"><div><span class="tag">' + p.type + '</span>' + catBadge + '</div><span class="qt">' + p.date + ' · ' + p.time + '</span></div></div></div>';
+    html += '<div style="font-size:0.78rem;line-height:1.5;margin-bottom:4px">' + (p.caption || '') + '</div>';
+    if (p.hashtags) html += '<div style="font-size:0.67rem;color:var(--ac2);margin-bottom:6px">' + p.hashtags + '</div>';
+    html += '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">' + statusBadge + actionBtn + '</div></div>';
+  }
+  c.innerHTML = html;
+}
+
+function markDone(id) {
+  for (var i = 0; i < queue.length; i++) {
+    if (queue[i].id === id) { queue[i].status = 'publié'; break; }
+  }
+  renderQueue();
+}
+
+function renderSmartPlan() {
+  var c = document.getElementById('smart-plan');
+  if (!c) return;
+  var html = '';
+  for (var i = 0; i < SMART_PLAN.length; i++) {
+    var p = SMART_PLAN[i];
+    var border = i < SMART_PLAN.length - 1 ? '1px solid var(--br)' : 'none';
+    var catCls = p.cat === 'pro' ? 'ctype ctype-pro' : 'ctype ctype-life';
+    var catLbl = p.cat === 'pro' ? '70% Pro' : '30% Toi';
+    html += '<div style="padding:10px 0;border-bottom:' + border + '">';
+    html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap">';
+    html += '<span class="tag">' + p.type + '</span>';
+    html += '<span class="' + catCls + '">' + catLbl + '</span>';
+    html += '<span style="font-size:0.78rem;font-weight:700">' + p.jour + '</span>';
+    html += '<span class="xs mu">· ' + p.time + '</span></div>';
+    html += '<div style="font-size:0.8rem;margin-bottom:2px">' + p.label + '</div>';
+    html += '<div style="font-size:0.68rem;color:var(--mu);font-style:italic;margin-bottom:6px">' + p.reason + '</div>';
+    html += '<button style="background:rgba(200,169,110,0.1);border:1px solid rgba(200,169,110,0.2);color:var(--ac);border-radius:7px;padding:4px 10px;cursor:pointer;font-family:Barlow,sans-serif;font-weight:700;font-size:0.68rem" onclick="prepFromPlan(\'' + p.type + '\',\'' + p.time + '\')">Préparer →</button>';
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function prepFromPlan(type, time) {
+  document.getElementById('post-type').value = type;
+  document.getElementById('post-time').value = time;
+  goTab('plan');
+}
+
+function calcRevenu() {
+  var m = parseInt(document.getElementById('nb-mariages').value) || 0;
+  var tm = parseInt(document.getElementById('tarif-mariage').value) || 0;
+  var a = parseInt(document.getElementById('nb-autres').value) || 0;
+  var ta = parseInt(document.getElementById('tarif-autres').value) || 0;
+  var r = parseInt(document.getElementById('nb-recurrents').value) || 0;
+  var tr = parseInt(document.getElementById('tarif-recurrents').value) || 0;
+  var total = (m * tm) + (a * ta) + (r * tr);
+  document.getElementById('total-revenu').textContent = total.toLocaleString('fr-FR') + '€';
+  var pct = Math.min((total / 7000) * 100, 100);
+  var bar = document.getElementById('revenu-bar');
+  bar.style.width = pct + '%';
+  bar.style.background = total >= 5000 ? 'var(--gn)' : total >= 3000 ? 'var(--or)' : 'var(--ac)';
+  var status = document.getElementById('objectif-status');
+  var manque = document.getElementById('revenu-manque');
+  if (total >= 7000) {
+    status.textContent = '🎉 Objectif maximum atteint !'; status.style.color = 'var(--gn)';
+    manque.textContent = 'Tu es dans la zone cible. Pense à sponsoriser.';
+  } else if (total >= 5000) {
+    status.textContent = '✓ Objectif minimum atteint'; status.style.color = 'var(--gn)';
+    manque.textContent = 'Il manque ' + (7000 - total).toLocaleString('fr-FR') + '€ pour 7 000€/mois';
+  } else {
+    status.textContent = 'En dessous de l\'objectif'; status.style.color = 'var(--or)';
+    manque.textContent = 'Il manque ' + (5000 - total).toLocaleString('fr-FR') + '€ pour 5 000€/mois';
+  }
+}
+
+function renderScenarios() {
+  var c = document.getElementById('scenarios-list');
+  if (!c) return;
+  var html = '';
+  for (var i = 0; i < SCENARIOS.length; i++) {
+    var s = SCENARIOS[i];
+    var total = (s.mariages * s.tarif) + (s.autres * s.ta) + (s.rec * s.tr);
+    var ok = total >= 5000;
+    var color = ok ? 'var(--gn)' : 'var(--or)';
+    var details = s.mariages + ' mariages × ' + s.tarif + '€';
+    if (s.autres > 0) details += ' · ' + s.autres + ' shootings × ' + s.ta + '€';
+    if (s.rec > 0) details += ' · ' + s.rec + ' contrat(s) × ' + s.tr + '€/mois';
+    html += '<div style="padding:10px;background:var(--c2);border-radius:10px;margin-bottom:8px;cursor:pointer" onclick="applyScenario(' + s.mariages + ',' + s.tarif + ',' + s.autres + ',' + s.ta + ',' + s.rec + ',' + s.tr + ')">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">';
+    html += '<div style="font-size:0.8rem;font-weight:700">' + s.label + '</div>';
+    html += '<div style="font-family:Bebas Neue,sans-serif;font-size:1.2rem;color:' + color + '">' + total.toLocaleString('fr-FR') + '€</div></div>';
+    html += '<div style="font-size:0.7rem;color:var(--mu)">' + details + '</div>';
+    html += '<div style="font-size:0.68rem;margin-top:4px;color:' + color + '">' + (ok ? '✓ Objectif atteint' : '↑ Utiliser ce scénario') + '</div>';
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function applyScenario(m, tm, a, ta, r, tr) {
+  document.getElementById('nb-mariages').value = m;
+  document.getElementById('tarif-mariage').value = tm;
+  document.getElementById('nb-autres').value = a;
+  document.getElementById('tarif-autres').value = ta;
+  document.getElementById('nb-recurrents').value = r;
+  document.getElementById('tarif-recurrents').value = tr;
+  calcRevenu();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function copyEl(srcId, btn) {
+  var txt = document.getElementById(srcId).textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(function() {
+      var orig = btn.textContent; btn.textContent = '✓ Copié !'; btn.style.color = 'var(--gn)';
+      setTimeout(function() { btn.textContent = orig; btn.style.color = ''; }, 2000);
+    });
+  }
+}
+
+function analyzeStats() {
+  var reach = document.getElementById('met-reach').value || '0';
+  var views = document.getElementById('met-views').value || '0';
+  var likes = document.getElementById('met-likes').value || '0';
+  var saves = document.getElementById('met-saves').value || '0';
+  var comments = document.getElementById('met-comments').value || '0';
+  var reposts = document.getElementById('met-reposts').value || '0';
+  var followers = document.getElementById('met-followers') ? document.getElementById('met-followers').value || '0' : '0';
+  var profile = document.getElementById('met-profile') ? document.getElementById('met-profile').value || '0' : '0';
+  var link = document.getElementById('met-link') ? document.getElementById('met-link').value || '0' : '0';
+  var skip = document.getElementById('met-skip') ? document.getElementById('met-skip').value || '0' : '0';
+  var type = document.getElementById('met-type').value;
+  var niche = document.getElementById('met-niche') ? document.getElementById('met-niche').value : 'lifestyle';
+  var desc = document.getElementById('met-desc') ? document.getElementById('met-desc').value : '';
+  var hasData = reach!='0'||views!='0'||likes!='0'||saves!='0'||comments!='0'||reposts!='0';
+  if (!hasData) { alert("Entre au moins une metrique avant de lancer le diagnostic."); return; }
+  document.getElementById('stats-loading').style.display = 'flex';
+  document.getElementById('stats-result').innerHTML = '';
+  var engBase = parseInt(reach)||parseInt(views)||1;
+  var engTotal = parseInt(likes)+parseInt(comments)+parseInt(saves)+parseInt(reposts);
+  var engRate = ((engTotal/engBase)*100).toFixed(1);
+  var saveRate = ((parseInt(saves)/engBase)*100).toFixed(2);
+  var repostRate = ((parseInt(reposts)/engBase)*100).toFixed(2);
+  var prompt = "Tu es analyste Instagram expert pour Djibril Kouadio (@djib.prod), photographe evenementiel, automobile et sportifs, Sartrouville IDF, 361 abonnes. Objectif : 5000-7000 euros/mois, 2000-3000 abonnes fin 2026. 90% revenus via Reebsa. Strategie 70/30. Record : 10 851 vues, 59 reposts (0.54%), 8 saves, taux ignore 76.3%. POST ANALYSE - Type:" + type + ", Niche:" + niche + ", Description:" + (desc||"non renseignee") + ". Metriques : portee=" + reach + ", vues=" + views + ", likes=" + likes + ", commentaires=" + comments + ", saves=" + saves + ", reposts=" + reposts + ", nouveaux abonnes=" + followers + ", visites profil=" + profile + ", clics bio=" + link + ", taux ignore=" + skip + "%. Taux engagement calcule : " + engRate + "%, taux save : " + saveRate + "%, taux repost : " + repostRate + "%. Analyse complete et personnalisee. JSON sans backticks : {\"score\":(0-10),\"verdict\":\"1 phrase directe\",\"taux_engagement\":\"" + engRate + "%\",\"interpretation_engagement\":\"bon/moyen/faible et pourquoi\",\"attraction\":[{\"titre\":\"...\",\"texte\":\"analyse precise avec chiffres\",\"p\":\"h|n\"}],\"conversion\":[{\"titre\":\"...\",\"texte\":\"lien avec objectif revenus\",\"p\":\"h|n\"}],\"croissance\":[{\"titre\":\"...\",\"texte\":\"impact sur objectif abonnes\",\"p\":\"h|n\"}],\"prochain\":\"instruction ultra-concrete pour le prochain post\",\"a_sponsoriser\":true,\"raison_sponsorisation\":\"pourquoi oui ou non\"}";
+  fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,messages:[{role:"user",content:prompt}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    var txt = "";
+    if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].text)txt+=d.content[i].text;}}
+    txt = txt.replace(/```json/g,"").replace(/```/g,"").trim();
+    try {
+      var ana = JSON.parse(txt);
+      var sc = ana.score>=7?"var(--gn)":ana.score>=5?"var(--or)":"var(--rd)";
+      var html = "<div class=\"card mt2\">";
+      html += "<div style=\"display:flex;align-items:center;justify-content:space-between;margin-bottom:4px\"><div class=\"ct\" style=\"margin-bottom:0\">Score global</div><div style=\"font-family:Bebas Neue,sans-serif;font-size:1.8rem;color:var(--ac)\">" + ana.score + "/10</div></div>";
+      html += "<div class=\"sbar\"><div class=\"sfil\" style=\"width:" + (ana.score*10) + "%;background:" + sc + "\"></div></div>";
+      html += "<div class=\"ins mt1\" style=\"margin-bottom:8px\"><div class=\"ix\">" + ana.verdict + "</div></div>";
+      if(ana.taux_engagement){
+        html += "<div style=\"background:var(--c2);border-radius:9px;padding:10px;display:flex;align-items:center;justify-content:space-between\">";
+        html += "<div><div style=\"font-size:0.7rem;color:var(--mu)\">Taux d engagement</div><div style=\"font-family:Bebas Neue,sans-serif;font-size:1.4rem;color:var(--ac)\">" + ana.taux_engagement + "</div></div>";
+        html += "<div style=\"font-size:0.72rem;color:var(--mu);text-align:right;max-width:55%\">" + (ana.interpretation_engagement||"") + "</div></div>";
+      }
+      html += "</div>";
+      if(ana.attraction&&ana.attraction.length>0){
+        html += "<div class=\"card mt2\"><div class=\"ct\">👁 Attraction — Visibilite</div>";
+        for(var i=0;i<ana.attraction.length;i++){var a=ana.attraction[i];html+="<div class=\"ins "+(a.p==="h"?"o":"b")+"\"><div class=\"it\">"+a.titre+(a.p==="h"?"<span class=\"tag to\" style=\"margin-left:5px;font-size:0.58rem\">Priorite</span>":"")+"</div><div class=\"ix\">"+a.texte+"</div></div>";}
+        html += "</div>";
+      }
+      if(ana.conversion&&ana.conversion.length>0){
+        html += "<div class=\"card mt2\"><div class=\"ct\">💰 Conversion — Clients</div>";
+        for(var j=0;j<ana.conversion.length;j++){var cv=ana.conversion[j];html+="<div class=\"ins "+(cv.p==="h"?"g":"p")+"\"><div class=\"it\">"+cv.titre+(cv.p==="h"?"<span class=\"tag tg\" style=\"margin-left:5px;font-size:0.58rem\">Priorite</span>":"")+"</div><div class=\"ix\">"+cv.texte+"</div></div>";}
+        html += "</div>";
+      }
+      if(ana.croissance&&ana.croissance.length>0){
+        html += "<div class=\"card mt2\"><div class=\"ct\">📈 Croissance — Abonnes</div>";
+        for(var k=0;k<ana.croissance.length;k++){var cr=ana.croissance[k];html+="<div class=\"ins "+(cr.p==="h"?"b":"")+"\"><div class=\"it\">"+cr.titre+"</div><div class=\"ix\">"+cr.texte+"</div></div>";}
+        html += "</div>";
+      }
+      if(ana.a_sponsoriser!==undefined){
+        html += "<div class=\"card mt2\"><div class=\"ct\">Sponsoriser ce post ?</div>";
+        html += "<div class=\"ins "+(ana.a_sponsoriser?"g":"")+"\"><div class=\"it\">"+(ana.a_sponsoriser?"🚀 OUI — Signal positif":"⏳ PAS ENCORE")+"</div><div class=\"ix\">"+(ana.raison_sponsorisation||"")+"</div></div></div>";
+      }
+      if(ana.prochain){html+="<div class=\"card mt2\"><div class=\"ct\">🎯 Prochain post recommande</div><div class=\"ins g\" style=\"margin-bottom:0\"><div class=\"ix\">"+ana.prochain+"</div></div></div>";}
+      document.getElementById("stats-result").innerHTML = html;
+      // Save to history
+      try {
+        saveToHistory({
+          date: document.getElementById('met-date') ? document.getElementById('met-date').value : new Date().toISOString().split('T')[0],
+          type: document.getElementById('met-type').value,
+          niche: document.getElementById('met-niche') ? document.getElementById('met-niche').value : 'lifestyle',
+          desc: document.getElementById('met-desc') ? document.getElementById('met-desc').value : '',
+          reach: document.getElementById('met-reach').value,
+          views: document.getElementById('met-views').value,
+          likes: document.getElementById('met-likes').value,
+          saves: document.getElementById('met-saves').value,
+          comments: document.getElementById('met-comments').value,
+          reposts: document.getElementById('met-reposts').value,
+          followers: document.getElementById('met-followers') ? document.getElementById('met-followers').value : '0',
+          score: ana.score,
+          verdict: ana.verdict,
+          prochain: ana.prochain,
+          engRate: engRate
+        });
+      } catch(ex) {}
+    } catch(e) {
+      document.getElementById("stats-result").innerHTML = "<div class=\"card\"><div class=\"ins r\"><div class=\"it\">Erreur d analyse</div><div class=\"ix\">Reessaie dans quelques secondes.</div></div></div>";
+    }
+    document.getElementById("stats-loading").style.display = "none";
+  }).catch(function(){
+    document.getElementById("stats-result").innerHTML = "<div class=\"card\"><div class=\"ins r\"><div class=\"it\">Erreur reseau</div><div class=\"ix\">Verifie ta connexion.</div></div></div>";
+    document.getElementById("stats-loading").style.display = "none";
+  });
+}
+
+// ── Historique des analyses ──
+var postHistory = JSON.parse(localStorage.getItem('djib_history') || '[]');
+
+function saveToHistory(post) {
+  postHistory.unshift(post);
+  if (postHistory.length > 50) postHistory = postHistory.slice(0, 50);
+  try { localStorage.setItem('djib_history', JSON.stringify(postHistory)); } catch(e) {}
+  renderHistory();
+  renderPatternsTab();
+}
+
+function renderHistory() {
+  var list = document.getElementById('history-list');
+  var empty = document.getElementById('history-empty');
+  if (!list) return;
+  if (postHistory.length === 0) {
+    if (empty) empty.style.display = 'block';
+    list.innerHTML = '';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  var nicheEmojis = {auto:'🚗',mariage:'💍',sport:'🏆',food:'🍽️',evenement:'🎉',lifestyle:'🎭'};
+  var html = '';
+  for (var i = 0; i < postHistory.length; i++) {
+    var p = postHistory[i];
+    var emoji = nicheEmojis[p.niche] || '📸';
+    var scoreColor = p.score >= 7 ? 'var(--gn)' : p.score >= 5 ? 'var(--or)' : 'var(--rd)';
+    var engRate = p.engRate || '—';
+    html += '<div class="card" style="margin-bottom:10px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
+    html += '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:1.2rem">' + emoji + '</span><div><div style="font-size:0.8rem;font-weight:700">' + (p.desc || p.type) + '</div><div class="xs mu">' + (p.date || '') + ' · ' + p.type + ' · ' + p.niche + '</div></div></div>';
+    html += '<div style="font-family:Bebas Neue,sans-serif;font-size:1.5rem;color:' + scoreColor + '">' + p.score + '/10</div>';
+    html += '</div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">';
+    html += '<div style="text-align:center;background:var(--c2);border-radius:7px;padding:6px"><div style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:var(--ac)">' + (p.reach||'—') + '</div><div class="xs mu">Portée</div></div>';
+    html += '<div style="text-align:center;background:var(--c2);border-radius:7px;padding:6px"><div style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:var(--gn)">' + (p.likes||'—') + '</div><div class="xs mu">Likes</div></div>';
+    html += '<div style="text-align:center;background:var(--c2);border-radius:7px;padding:6px"><div style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:var(--bl)">' + (p.saves||'—') + '</div><div class="xs mu">Saves ★</div></div>';
+    html += '<div style="text-align:center;background:var(--c2);border-radius:7px;padding:6px"><div style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:var(--ac2)">' + engRate + '%</div><div class="xs mu">Engage.</div></div>';
+    html += '</div>';
+    if (p.verdict) html += '<div class="ins" style="margin-bottom:6px"><div class="ix">' + p.verdict + '</div></div>';
+    if (p.prochain) html += '<div class="ins g" style="margin-bottom:0"><div class="it">🎯 Action</div><div class="ix">' + p.prochain + '</div></div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function renderPatternsTab() {
+  var empty = document.getElementById('patterns-empty');
+  var content = document.getElementById('patterns-content');
+  if (!empty || !content) return;
+  if (postHistory.length < 3) { empty.style.display = 'block'; content.style.display = 'none'; return; }
+  empty.style.display = 'none'; content.style.display = 'block';
+  // Compute patterns from history
+  var nicheScores = {};
+  var typeScores = {};
+  var dayScores = {};
+  for (var i = 0; i < postHistory.length; i++) {
+    var p = postHistory[i];
+    if (!nicheScores[p.niche]) nicheScores[p.niche] = [];
+    nicheScores[p.niche].push(p.score);
+    if (!typeScores[p.type]) typeScores[p.type] = [];
+    typeScores[p.type].push(p.score);
+    if (p.date) {
+      var d = new Date(p.date);
+      var days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+      var day = days[d.getDay()];
+      if (!dayScores[day]) dayScores[day] = [];
+      dayScores[day].push(p.score);
+    }
+  }
+  function avg(arr) { return arr.length ? (arr.reduce(function(a,b){return a+b;},0)/arr.length).toFixed(1) : 0; }
+  function best(obj) {
+    var b = null, bv = -1;
+    for (var k in obj) { var v = parseFloat(avg(obj[k])); if (v > bv) { bv = v; b = k; } }
+    return {key: b, val: bv};
+  }
+  var bestNiche = best(nicheScores);
+  var bestType = best(typeScores);
+  var bestDay = best(dayScores);
+  var nicheEmojis = {auto:'🚗',mariage:'💍',sport:'🏆',food:'🍽️',evenement:'🎉',lifestyle:'🎭'};
+  var html = '';
+  html += '<div class="card">';
+  html += '<div class="ct">Tes tops — basé sur ' + postHistory.length + ' posts analysés</div>';
+  if (bestNiche.key) html += '<div class="row"><span style="font-size:0.8rem;font-weight:700">' + (nicheEmojis[bestNiche.key]||'') + ' Meilleure niche</span><div style="text-align:right"><div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;color:var(--ac)">' + bestNiche.key + '</div><div class="xs mu">Score moy. ' + bestNiche.val + '/10</div></div></div>';
+  if (bestType.key) html += '<div class="row"><span style="font-size:0.8rem;font-weight:700">📱 Meilleur format</span><div style="text-align:right"><div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;color:var(--ac)">' + bestType.key + '</div><div class="xs mu">Score moy. ' + bestType.val + '/10</div></div></div>';
+  if (bestDay.key) html += '<div class="row"><span style="font-size:0.8rem;font-weight:700">📅 Meilleur jour</span><div style="text-align:right"><div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;color:var(--ac)">' + bestDay.key + '</div><div class="xs mu">Score moy. ' + bestDay.val + '/10</div></div></div>';
+  html += '</div>';
+  // Évolution
+  html += '<div class="card mt2"><div class="ct">Évolution de tes scores</div>';
+  for (var j = Math.min(postHistory.length-1, 7); j >= 0; j--) {
+    var ph = postHistory[j];
+    var sc = ph.score >= 7 ? 'var(--gn)' : ph.score >= 5 ? 'var(--or)' : 'var(--rd)';
+    var pct = (ph.score/10*100);
+    html += '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span class="xs mu">' + (ph.desc||ph.type||'Post') + ' ' + (ph.date||'') + '</span><span style="font-size:0.72rem;font-weight:700;color:' + sc + '">' + ph.score + '/10</span></div>';
+    html += '<div style="background:var(--c2);border-radius:4px;height:5px;overflow:hidden"><div style="width:' + pct + '%;height:100%;background:' + sc + ';border-radius:4px"></div></div></div>';
+  }
+  html += '</div>';
+  document.getElementById('patterns-list').innerHTML = html;
+}
+
+function analyzePatterns() {
+  if (postHistory.length < 3) return;
+  var patternsResult = document.getElementById('patterns-result');
+  patternsResult.innerHTML = '<div class="loader" style="justify-content:center"><span></span><span></span><span></span><span class="lt">Analyse des patterns…</span></div>';
+  var summary = postHistory.slice(0, 10).map(function(p, i) {
+    return (i+1) + '. ' + p.type + '/' + p.niche + ' score:' + p.score + '/10 portee:' + (p.reach||0) + ' saves:' + (p.saves||0) + ' reposts:' + (p.reposts||0) + ' desc:"' + (p.desc||'') + '"';
+  }).join('. ');
+  var prompt = "Analyste Instagram expert pour Djibril (@djib.prod) photographe Sartrouville IDF. Objectif 5000-7000 euros/mois. Voici ses " + postHistory.length + " derniers posts analyses : " + summary + ". Identifie ses patterns reels, ce qui marche et ne marche pas, et donne une strategie de contenu personnalisee pour les 30 prochains jours. Reponds en texte clair et direct, pas de JSON, max 200 mots.";
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:prompt}]})
+  }).then(function(r){return r.json();}).then(function(d){
+    var txt = '';
+    if(d.content){for(var i=0;i<d.content.length;i++){if(d.content[i].text)txt+=d.content[i].text;}}
+    patternsResult.innerHTML = '<div class="ins g"><div class="it">🔍 Analyse IA de tes patterns</div><div class="ix" style="white-space:pre-wrap">' + txt + '</div></div>';
+  }).catch(function(){
+    patternsResult.innerHTML = '<div class="ins r"><div class="ix">Erreur. Réessaie.</div></div>';
+  });
+}
+
+function switchATab(tab) {
+  var tabs = ['new','history','patterns'];
+  for (var i = 0; i < tabs.length; i++) {
+    var panel = document.getElementById('apanel-' + tabs[i]);
+    var btn = document.getElementById('atab-' + tabs[i]);
+    if (panel) panel.style.display = tabs[i] === tab ? 'block' : 'none';
+    if (btn) {
+      btn.style.background = tabs[i] === tab ? 'var(--ac)' : 'transparent';
+      btn.style.color = tabs[i] === tab ? '#0a0a0f' : 'var(--mu)';
+    }
+  }
+  if (tab === 'history') renderHistory();
+  if (tab === 'patterns') renderPatternsTab();
+}
+
+// ── Idées de contenu ──
+var IDEAS = [
+  // AUTO — prouvé sur les comptes comme @e_lphotography
+  {niche:'auto', type:'Reel', cat:'pro', format:'15-20 sec',
+   titre:'BTS → résultat en split screen',
+   desc:'Commence par toi qui prépares l\'appareil ou qui arrives sur le lieu. Coupe net sur le résultat final. Musique percutante qui cale sur la coupe. 0 parole.',
+   pourquoi:'Le contraste BTS/résultat crée un effet "wow" qui génère des replays. Ton record Bruit Blanc utilisait cette mécanique.',
+   hashtags:'#photographeautomobile #carshooting #detailingfrance #carphotography #djibprod'},
+  {niche:'auto', type:'Reel', cat:'pro', format:'10 sec max',
+   titre:'Détail unique × musique trap',
+   desc:'Un seul détail de la voiture — jante, logo, aileron, intérieur. Mise au point progressive. Lumière dorée ou néon. Fin sur le profil complet de la voiture.',
+   pourquoi:'Format court = fort taux de replay. @e_lphotography utilise ça sur ses posts à 100K+ vues.',
+   hashtags:'#carsofinstagram #cardetail #photographeauto #carphoto #djibprod'},
+  {niche:'auto', type:'Carrousel', cat:'pro', format:'5-8 photos',
+   titre:'Avant retouche / Après retouche',
+   desc:'Photo brute sortie de boîtier vs photo retouchée. Même cadrage exact. Montre l\'écart de couleurs, de contraste, de profondeur. Tag le client/garage.',
+   pourquoi:'Meilleur format pour les sauvegardes — les gens gardent pour apprendre. Performe 3x plus que les posts simples.',
+   hashtags:'#retouchephoto #lightroom #photographeautomobile #beforeafter #djibprod'},
+
+  // MARIAGE — validé par Reebsa Production
+  {niche:'mariage', type:'Reel', cat:'pro', format:'25-35 sec',
+   titre:'Mini-film émotionnel mariage',
+   desc:'Commence par un détail (alliance, robe, chaussures). Enchaîne sur le premier regard. Termine sur un sourire ou un baiser. Musique émotionnelle instrumentale. Zéro texte.',
+   pourquoi:'Les mariés partagent massivement ce format. Chaque partage = leur réseau qui te découvre. Coût d\'acquisition client : 0€.',
+   hashtags:'#photographemariageparis #weddingphotographer #mariageidf #weddingday #djibprod'},
+  {niche:'mariage', type:'Post', cat:'pro', format:'1 photo forte',
+   titre:'Le regard que tu ne rates jamais',
+   desc:'Le moment où les mariés se regardent sans savoir que tu es là. Pas posé. Capturé. Lumière naturelle. Pas de flash. Légende courte, émotionnelle.',
+   pourquoi:'@99mariages a construit 9 500 abonnés avec seulement ce type de moment. C\'est l\'émotion qui convertit.',
+   hashtags:'#photographemariage #mariagefrance #weddingmoment #amour #djibprod'},
+  {niche:'mariage', type:'Carrousel', cat:'pro', format:'8-10 photos',
+   titre:'Best of mariage — 24h après',
+   desc:'Les 8-10 meilleures photos du mariage postées le lendemain. Commence par la plus forte. Tag les mariés, le lieu, Reebsa Production. Légende courte.',
+   pourquoi:'Le lendemain = émotion encore fraîche. Les mariés et leurs proches partagent massivement. Algorithme boost = portée x2.',
+   hashtags:'#photographemariageparis #bestofwedding #mariageidf #weddingphoto #reebsaproduction'},
+
+  // SPORT
+  {niche:'sport', type:'Post', cat:'pro', format:'1 photo',
+   titre:'Le freeze action parfait',
+   desc:'Action gelée à l\'instant le plus intense — frappe, saut, duel. Fond flou ou fond uni. Sportif en premier plan net. Pas de mise en scène.',
+   pourquoi:'Ce format devient fond d\'écran — taux de sauvegarde très élevé. Les clubs repartagent = audience gratuite.',
+   hashtags:'#photographesportif #sportphotography #footballfrance #actionphoto #djibprod'},
+  {niche:'sport', type:'Carrousel', cat:'pro', format:'5 photos',
+   titre:'No Distraction — fond uni',
+   desc:'Prends 3-5 photos du sportif. Retouche pour isoler le sujet sur fond de couleur unie (couleur du club ou noir). Style minimaliste. Pas de décor.',
+   pourquoi:'Trend No Distraction = fond d\'écran viral. Un carrousel de ce type a généré 1.8M vues sur un compte sport en 2026.',
+   hashtags:'#nodistraction #sportphotography #footballfrance #photographesport #djibprod'},
+  {niche:'sport', type:'Reel', cat:'pro', format:'15 sec',
+   titre:'Série de 5 actions en montage cut',
+   desc:'5 actions du même sportif. Montage sec, un cut par action, synchronisé sur la musique. Accéléré ou ralenti selon le moment.',
+   pourquoi:'Le montage rythmé crée un fort taux de replay. Les sportifs partagent pour se montrer sous leur meilleur jour.',
+   hashtags:'#sportphoto #footballeur #photographesportif #action #djibprod'},
+
+  // LIFESTYLE / TOI
+  {niche:'lifestyle', type:'Reel', cat:'life', format:'20-30 sec',
+   titre:'BTS d\'un shooting — sans parler',
+   desc:'Toi en train de shooter. Juste les gestes, les déplacements, l\'appareil photo, les lumières. Pas de selfie, pas de face cam. Musique ambient. Vue de derrière ou de côté.',
+   pourquoi:'Montre ton métier sans te vendre. Les gens s\'abonnent à ce que tu fais, pas à ce que tu dis. Comme ton Reel Bruit Blanc.',
+   hashtags:'#photographe #bts #behindthescenes #djibprod #bruitblanc'},
+  {niche:'lifestyle', type:'Post', cat:'life', format:'1 photo',
+   titre:'Toi dans un cadre cinématographique',
+   desc:'Photo de toi dans un lieu intéressant — lumière forte, décor qui raconte quelque chose. Pas posé. Pas souriant. Juste présent. Comme tes photos de LA.',
+   pourquoi:'Tes photos de LA sont exactement ce format. L\'ambiance "photographe qui voyage" attire les marques et les agences.',
+   hashtags:'#photographeparisien #djibprod #lifestyle #portrait #sartrouville'},
+  {niche:'lifestyle', type:'Story', cat:'life', format:'Stories',
+   titre:'Teaser veille de shooting',
+   desc:'Juste une story. Pas de texte élaboré. Le lieu, l\'heure, une ambiance. "Demain." ou "Dans 2h." ou même rien — juste l\'image qui parle.',
+   pourquoi:'Crée l\'anticipation. Les gens reviennent voir le résultat. Booste les vues sur le post du lendemain.',
+   hashtags:''},
+];
+
+var currentFilter = 'all';
+
+function filterIdeas(niche) {
+  currentFilter = niche;
+  // Update filter buttons
+  var niches = ['all','auto','mariage','sport','lifestyle'];
+  for (var i = 0; i < niches.length; i++) {
+    var btn = document.getElementById('ifilter-' + niches[i]);
+    if (!btn) continue;
+    if (niches[i] === niche) {
+      btn.style.background = 'var(--ac)'; btn.style.color = '#0a0a0f';
+    } else {
+      btn.style.background = 'var(--c2)'; btn.style.color = 'var(--mu)';
+    }
+  }
+  renderIdeas();
+}
+
+function renderIdeas() {
+  var list = document.getElementById('ideas-list');
+  if (!list) return;
+  var filtered = currentFilter === 'all' ? IDEAS : IDEAS.filter(function(i){ return i.niche === currentFilter; });
+  var nicheEmojis = {auto:'🚗',mariage:'💍',sport:'🏆',lifestyle:'🎭'};
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var idea = filtered[i];
+    var emoji = nicheEmojis[idea.niche] || '📸';
+    html += '<div style="background:var(--c2);border-radius:12px;padding:14px;margin-bottom:10px">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
+    html += '<div style="display:flex;align-items:center;gap:6px"><span>' + emoji + '</span><span class="tag">' + idea.type + '</span><span class="ctype ' + (idea.cat==='pro'?'ctype-pro':'ctype-life') + '">' + (idea.cat==='pro'?'70%':'30%') + '</span></div>';
+    html += '<span class="xs mu">' + idea.format + '</span></div>';
+    html += '<div style="font-size:0.85rem;font-weight:700;margin-bottom:6px;font-family:Bebas Neue,sans-serif;letter-spacing:.02em">' + idea.titre + '</div>';
+    html += '<div style="font-size:0.75rem;color:var(--tx);line-height:1.55;margin-bottom:8px">' + idea.desc + '</div>';
+    html += '<div class="ins g" style="margin-bottom:8px"><div class="it">Pourquoi ça marche</div><div class="ix">' + idea.pourquoi + '</div></div>';
+    if (idea.hashtags) html += '<div style="font-size:0.68rem;color:var(--ac2)">' + idea.hashtags + '</div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+
+
+var regData = JSON.parse(localStorage.getItem('djib_reg') || '{"weeks":[],"currentWeek":{"posts":[],"proCount":0,"lifeCount":0}}');
+
+function getWeekKey() {
+  var d = new Date();
+  var jan1 = new Date(d.getFullYear(), 0, 1);
+  var week = Math.ceil(((d - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  return d.getFullYear() + '-W' + week;
+}
+
+function saveReg() {
+  try { localStorage.setItem('djib_reg', JSON.stringify(regData)); } catch(e) {}
+}
+
+function logPost() {
+  var today = new Date().toISOString().split('T')[0];
+  if (!regData.currentWeek) regData.currentWeek = {posts:[], proCount:0, lifeCount:0};
+  if (regData.currentWeek.posts.indexOf(today) === -1) {
+    regData.currentWeek.posts.push(today);
+    saveReg();
+    renderRegularite();
+  }
+}
+
+function logPostType(type) {
+  if (!regData.currentWeek) regData.currentWeek = {posts:[], proCount:0, lifeCount:0};
+  var today = new Date().toISOString().split('T')[0];
+  if (regData.currentWeek.posts.indexOf(today) === -1) {
+    regData.currentWeek.posts.push(today);
+  }
+  if (type === 'pro') regData.currentWeek.proCount = (regData.currentWeek.proCount||0) + 1;
+  else regData.currentWeek.lifeCount = (regData.currentWeek.lifeCount||0) + 1;
+  saveReg();
+  renderRegularite();
+}
+
+function undoPost() {
+  if (!regData.currentWeek || !regData.currentWeek.posts.length) return;
+  regData.currentWeek.posts.pop();
+  saveReg();
+  renderRegularite();
+}
+
+function checkNewWeek() {
+  var key = getWeekKey();
+  if (!regData.weekKey) regData.weekKey = key;
+  if (regData.weekKey !== key) {
+    // Archive current week
+    if (!regData.weeks) regData.weeks = [];
+    var cw = regData.currentWeek || {posts:[], proCount:0, lifeCount:0};
+    var success = cw.posts.length >= 3;
+    regData.weeks.unshift({key: regData.weekKey, posts: cw.posts.length, success: success, proCount: cw.proCount||0, lifeCount: cw.lifeCount||0});
+    if (regData.weeks.length > 8) regData.weeks = regData.weeks.slice(0, 8);
+    regData.weekKey = key;
+    regData.currentWeek = {posts:[], proCount:0, lifeCount:0};
+    saveReg();
+  }
+}
+
+function calcStreak() {
+  if (!regData.weeks || regData.weeks.length === 0) return 0;
+  var streak = 0;
+  for (var i = 0; i < regData.weeks.length; i++) {
+    if (regData.weeks[i].success) streak++;
+    else break;
+  }
+  // Add current week if already at 3 posts
+  if (regData.currentWeek && regData.currentWeek.posts.length >= 3) streak++;
+  return streak;
+}
+
+function renderRegularite() {
+  checkNewWeek();
+  var cw = regData.currentWeek || {posts:[], proCount:0, lifeCount:0};
+  var count = cw.posts.length;
+  var goal = 3;
+  var pct = Math.min((count / goal) * 100, 100);
+  var streak = calcStreak();
+
+  // Streak
+  var streakEl = document.getElementById('streak-count');
+  if (streakEl) streakEl.textContent = streak;
+
+  // Flames
+  var flames = document.getElementById('streak-flames');
+  if (flames) {
+    var fhtml = '';
+    for (var i = 0; i < Math.min(streak, 10); i++) fhtml += '<span style="font-size:1.4rem">🔥</span>';
+    if (streak === 0) fhtml = '<span style="font-size:1.4rem;opacity:.3">🔥🔥🔥</span>';
+    flames.innerHTML = fhtml;
+  }
+
+  // Streak message
+  var msg = document.getElementById('streak-msg');
+  if (msg) {
+    if (streak === 0) msg.textContent = 'Lance ta première semaine à 3 posts 💪';
+    else if (streak === 1) msg.textContent = 'Bien démarré — continue la semaine prochaine !';
+    else if (streak < 4) msg.textContent = streak + ' semaines consécutives. Tu construis quelque chose.';
+    else if (streak < 8) msg.textContent = 'Sérieux. ' + streak + ' semaines. L\'algorithme te remarque.';
+    else msg.textContent = streak + ' semaines 🏆 Tu es dans le top des photographes réguliers.';
+  }
+
+  // Week label
+  var wl = document.getElementById('week-label');
+  if (wl) { var now = new Date(); wl.textContent = 'Semaine du ' + now.toLocaleDateString('fr-FR', {day:'numeric',month:'short'}); }
+
+  // Week dots
+  var dots = document.getElementById('week-dots');
+  if (dots) {
+    var dhtml = '';
+    for (var j = 0; j < goal; j++) {
+      var done = j < count;
+      dhtml += '<div style="flex:1;height:44px;border-radius:10px;background:' + (done?'var(--ac)':'var(--c2)') + ';border:2px solid ' + (done?'var(--ac)':'var(--br)') + ';display:flex;align-items:center;justify-content:center;font-size:1.2rem">' + (done?'✓':'') + '</div>';
+    }
+    dots.innerHTML = dhtml;
+  }
+
+  // Bar
+  var bar = document.getElementById('week-bar');
+  if (bar) { bar.style.width = pct + '%'; bar.style.background = count >= goal ? 'var(--gn)' : 'var(--ac)'; }
+
+  // Status
+  var status = document.getElementById('week-status');
+  if (status) {
+    if (count === 0) status.textContent = '0/3 posts cette semaine — commence aujourd\'hui';
+    else if (count === 1) status.textContent = '1/3 — 2 posts restants cette semaine';
+    else if (count === 2) status.textContent = '2/3 — encore 1 post pour valider la semaine 🔥';
+    else status.textContent = '✅ Semaine validée ! ' + (count > 3 ? count + '/3 — tu dépasses l\'objectif 💪' : '3/3');
+  }
+
+  // Undo btn
+  var undo = document.getElementById('undo-btn');
+  if (undo) undo.style.display = count > 0 ? 'block' : 'none';
+
+  // Balance 70/30
+  var balance = document.getElementById('balance-display');
+  if (balance) {
+    var pro = cw.proCount || 0;
+    var life = cw.lifeCount || 0;
+    var total = pro + life;
+    if (total === 0) {
+      balance.innerHTML = '<div class="xs mu" style="text-align:center;padding:8px 0">Aucun post typé cette semaine — utilise les boutons ci-dessous</div>';
+    } else {
+      var proPct = Math.round((pro/total)*100);
+      var lifePct = 100 - proPct;
+      var isGood = proPct >= 60 && proPct <= 80;
+      balance.innerHTML = '<div style="display:flex;border-radius:8px;overflow:hidden;height:24px;margin-bottom:6px">'
+        + '<div style="flex:' + pro + ';background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#0a0a0f">' + (pro>0?proPct+'%':'') + '</div>'
+        + '<div style="flex:' + (life||0.1) + ';background:var(--ac2);display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;color:#fff">' + (life>0?lifePct+'%':'') + '</div>'
+        + '</div>'
+        + '<div class="xs mu" style="text-align:center">' + pro + ' posts Pro · ' + life + ' posts Toi · ' + (isGood?'<span style="color:var(--gn)">✓ Bon équilibre</span>':'<span style="color:var(--or)">Ajuste le mix</span>') + '</div>';
+    }
+  }
+
+  // Weeks history
+  var hist = document.getElementById('weeks-history');
+  if (hist && regData.weeks && regData.weeks.length > 0) {
+    var hhtml = '';
+    for (var w = 0; w < regData.weeks.length; w++) {
+      var wk = regData.weeks[w];
+      hhtml += '<div class="row"><span style="font-size:0.78rem">' + wk.key + '</span><div style="display:flex;align-items:center;gap:8px">';
+      for (var p = 0; p < 3; p++) hhtml += '<div style="width:14px;height:14px;border-radius:50%;background:' + (p<wk.posts?'var(--ac)':'var(--c2)') + '"></div>';
+      hhtml += '<span style="font-size:0.72rem;color:' + (wk.success?'var(--gn)':'var(--rd)') + '">' + (wk.success?'✓':'✗') + '</span></div></div>';
+    }
+    hist.innerHTML = hhtml;
+  } else if (hist) {
+    hist.innerHTML = '<div class="xs mu" style="text-align:center;padding:12px 0">Ton historique apparaîtra ici semaine après semaine</div>';
+  }
+}
+
+// INIT
+window.onload = function() {
+  goTab('home');
+  renderScenarios();
+  calcRevenu();
+  checkNewWeek();
+  renderIdeas();
+};
+</script>
+</body>
+</html>
